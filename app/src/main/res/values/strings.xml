@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name" translatable="false">PopMovies</string>
+    <string name="greetings">Popular Movies</string>
+    <string name="action_settings">Settings</string>
+</resources>
