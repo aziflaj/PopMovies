@@ -1,5 +1,6 @@
 package az.aldoziflaj.popmovies;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -83,8 +84,8 @@ public class AllMoviesFragment extends Fragment {
                 getActivity(),
                 movieList, // list of data to show
                 R.layout.movie_info, // the layout of a single item
-                new String[] { MovieAdapter.MOVIE_TITLE, MovieAdapter.MOVIE_POSTER },
-                new int[] { R.id.movie_title_textview, R.id.movie_poster });
+                new String[]{MovieAdapter.MOVIE_TITLE, MovieAdapter.MOVIE_POSTER},
+                new int[]{R.id.movie_title_textview, R.id.movie_poster});
 
         moviesGridView.setAdapter(movieAdapter);
 
@@ -136,12 +137,14 @@ public class AllMoviesFragment extends Fragment {
     class FetchMoviesTask extends AsyncTask<String, Void, String> {
         public final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
         Toast errorInConnection;
+        ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             errorInConnection = Toast.makeText(getActivity(),
                     "Can't connect to the server",
                     Toast.LENGTH_LONG);
+            dialog = ProgressDialog.show(getActivity(), "Please wait", "Updating the movies");
         }
 
         @Override
@@ -203,7 +206,7 @@ public class AllMoviesFragment extends Fragment {
                     try {
                         reader.close();
                     } catch (IOException e) {
-                        Log.e(LOG_TAG, "Error: "+ e.getMessage());
+                        Log.e(LOG_TAG, "Error: " + e.getMessage());
 
                     }
                 }
@@ -222,12 +225,16 @@ public class AllMoviesFragment extends Fragment {
             movieList = fetchMovieListFromJSON(moviesJsonString);
             Log.d(LOG_TAG, "movielist updated");
 
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
             movieAdapter = new MovieAdapter(
                     getActivity(),
                     movieList, // list of data to show
                     R.layout.movie_info, // the layout of a single item
-                    new String[] { MovieAdapter.MOVIE_TITLE, MovieAdapter.MOVIE_POSTER },
-                    new int[] { R.id.movie_title_textview, R.id.movie_poster }
+                    new String[]{MovieAdapter.MOVIE_TITLE, MovieAdapter.MOVIE_POSTER},
+                    new int[]{R.id.movie_title_textview, R.id.movie_poster}
             );
 
             moviesGridView.setAdapter(movieAdapter);
@@ -242,7 +249,7 @@ public class AllMoviesFragment extends Fragment {
                 int movieListLength = jsonMovieList.length();
                 Log.d(LOG_TAG, movieListLength + " items fetched");
 
-                for (int i=0; i<movieListLength; i++) {
+                for (int i = 0; i < movieListLength; i++) {
                     JSONObject currentMovie = jsonMovieList.getJSONObject(i);
                     HashMap<String, String> item = new HashMap<>();
                     item.put(MovieAdapter.MOVIE_TITLE, currentMovie.getString(ApiHelper.ORIGINAL_TITLE_KEY));
