@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -92,9 +91,12 @@ public class AllMoviesFragment extends Fragment {
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String movieTitle = (String) ((TextView) view.findViewById(R.id.movie_title_textview)).getText();
+                HashMap<String, String> itemClicked = movieList.get(position);
+                String movieTitle = itemClicked.get(MovieAdapter.MOVIE_TITLE);
+                String moviePoster = itemClicked.get(MovieAdapter.MOVIE_POSTER);
                 Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
                 detailsIntent.putExtra("movie_title", movieTitle);
+                detailsIntent.putExtra("movie_poster", moviePoster);
                 startActivity(detailsIntent);
             }
         });

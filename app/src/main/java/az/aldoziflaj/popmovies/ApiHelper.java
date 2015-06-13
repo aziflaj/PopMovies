@@ -8,6 +8,7 @@ public interface ApiHelper {
     String API_BASE_URL = "http://api.themoviedb.org/3/discover/movie";
     String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     String IMAGE_DEFAULT_SIZE = "w185";
+    String IMAGE_SIZE_MEDIUM = "w342";
 
     String ID_KEY = "id";
     String ORIGINAL_TITLE_KEY = "original_title";
