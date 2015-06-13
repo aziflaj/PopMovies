@@ -48,11 +48,12 @@ public class MovieAdapter extends SimpleAdapter {
 
         Uri imageUri = Uri.parse(ApiHelper.IMAGE_BASE_URL).buildUpon()
                 .appendPath(ApiHelper.IMAGE_DEFAULT_SIZE)
-                .appendPath(moviePoster).build();
+                .appendPath(moviePoster.substring(1))
+                .build();
 
         Log.d("MovieAdapter", imageUri.toString());
 
-        Picasso.with(appContext).load(imageUri.toString()).into(posterImageView);
+        Picasso.with(appContext).load(imageUri).into(posterImageView);
 
         return convertView;
     }

@@ -1,9 +1,11 @@
 package az.aldoziflaj.popmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,7 +53,7 @@ public class AllMoviesFragment extends Fragment {
 
         moviesGridView = (GridView) rootView.findViewById(R.id.movies_gridview);
 
-        //*
+        /*
         // For testing only!
         movieList = new ArrayList<>();
         String[] moviesTitleList = {
@@ -62,10 +64,10 @@ public class AllMoviesFragment extends Fragment {
         };
 
         String[] moviesPosterList = {
-                "nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", //interstellar
-                "uXZYawqUsChGSj54wcuBtEdUJbh.jpg", //jurasic world
-                "kqjL17yufvn9OVLyXYpvtyrFfak.jpg", //mad max
-                "oAISjx6DvR2yUn9dxj00vP8OcJJ.jpg" //kingsman
+                "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", //interstellar
+                "/uXZYawqUsChGSj54wcuBtEdUJbh.jpg", //jurasic world
+                "/kqjL17yufvn9OVLyXYpvtyrFfak.jpg", //mad max
+                "/oAISjx6DvR2yUn9dxj00vP8OcJJ.jpg" //kingsman
         };
 
         for (int i=0; i<4; i++) {
@@ -76,6 +78,7 @@ public class AllMoviesFragment extends Fragment {
         }
         //*/
 
+        movieList = new ArrayList<>();
         movieAdapter = new MovieAdapter(
                 getActivity(),
                 movieList, // list of data to show
@@ -108,14 +111,29 @@ public class AllMoviesFragment extends Fragment {
         int itemId = item.getItemId();
 
         if (itemId == R.id.action_refresh) {
-            FetchMoviesTask task = new FetchMoviesTask();
-            task.execute();
+            updateMovies();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    class FetchMoviesTask extends AsyncTask<Void, Void, String> {
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateMovies();
+    }
+
+    private void updateMovies() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortOrder = prefs.getString(
+                getString(R.string.movie_sort_key),
+                getString(R.string.movie_sort_default));
+
+        FetchMoviesTask task = new FetchMoviesTask();
+        task.execute(sortOrder);
+    }
+
+    class FetchMoviesTask extends AsyncTask<String, Void, String> {
         public final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
         Toast errorInConnection;
 
@@ -127,14 +145,24 @@ public class AllMoviesFragment extends Fragment {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected String doInBackground(String... params) {
+            String sortOrder = null;
+            if (params.length != 0) {
+                if (params[0].equals(getString(R.string.movie_sort_default))) {
+                    sortOrder = ApiHelper.SORT_BY_POPULARITY;
+                } else {
+                    sortOrder = ApiHelper.SORT_BY_VOTES;
+                }
+
+            }
+
             HttpURLConnection urlConnection = null;
             String moviesJSONString = null;
             BufferedReader reader = null;
 
             try {
                 Uri moviesUri = Uri.parse(ApiHelper.API_BASE_URL).buildUpon()
-                        .appendQueryParameter(ApiHelper.SORT_KEY, ApiHelper.SORT_BY_POPULARITY)
+                        .appendQueryParameter(ApiHelper.SORT_KEY, sortOrder)
                         .appendQueryParameter(ApiHelper.API_KEY_QUERY, ApiHelper.API_KEY)
                         .build();
                 URL url = new URL(moviesUri.toString());
@@ -160,12 +188,10 @@ public class AllMoviesFragment extends Fragment {
                 //fetchMovieListFromJSON(moviesJSONString);
 
             } catch (MalformedURLException e) {
-                errorInConnection.show();
                 Log.e(LOG_TAG, "Error: " + e.getMessage());
                 return null;
 
             } catch (IOException e) {
-                errorInConnection.show();
                 Log.e(LOG_TAG, "Error: " + e.getMessage());
                 return null;
 
@@ -188,15 +214,23 @@ public class AllMoviesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String moviesJsonString) {
+            if (moviesJsonString == null) {
+                errorInConnection.show();
+                return;
+            }
+
             movieList = fetchMovieListFromJSON(moviesJsonString);
             Log.d(LOG_TAG, "movielist updated");
 
-            //*
-            movieAdapter.notifyDataSetChanged();
-            Log.d(LOG_TAG, "movieAdapter notified");
-            moviesGridView.invalidateViews();
+            movieAdapter = new MovieAdapter(
+                    getActivity(),
+                    movieList, // list of data to show
+                    R.layout.movie_info, // the layout of a single item
+                    new String[] { MovieAdapter.MOVIE_TITLE, MovieAdapter.MOVIE_POSTER },
+                    new int[] { R.id.movie_title_textview, R.id.movie_poster }
+            );
+
             moviesGridView.setAdapter(movieAdapter);
-            //*/
         }
 
         private ArrayList<HashMap<String, String>> fetchMovieListFromJSON(String jsonString) {
@@ -204,19 +238,16 @@ public class AllMoviesFragment extends Fragment {
             ArrayList<HashMap<String, String>> kvPair = new ArrayList<>();
 
             try {
-                JSONObject jsonResponse = new JSONObject(jsonString);
-                JSONArray jsonMovieList = jsonResponse.getJSONArray("results");
+                JSONArray jsonMovieList = (new JSONObject(jsonString)).getJSONArray("results");
                 int movieListLength = jsonMovieList.length();
                 Log.d(LOG_TAG, movieListLength + " items fetched");
 
                 for (int i=0; i<movieListLength; i++) {
                     JSONObject currentMovie = jsonMovieList.getJSONObject(i);
                     HashMap<String, String> item = new HashMap<>();
-                    item.put("title", currentMovie.getString(ApiHelper.ORIGINAL_TITLE_KEY));
-                    //item.put("image", ApiHelper.IMAGE_BASE_URL + currentMovie.getString(ApiHelper.POSTER_PATH_KEY));
-                    item.put("image", Integer.toString(R.drawable.mad_max));
+                    item.put(MovieAdapter.MOVIE_TITLE, currentMovie.getString(ApiHelper.ORIGINAL_TITLE_KEY));
+                    item.put(MovieAdapter.MOVIE_POSTER, currentMovie.getString(ApiHelper.POSTER_PATH_KEY));
                     kvPair.add(item);
-                    //movieList.add(currentMovie.getString(ApiHelper.ORIGINAL_TITLE_KEY));
                 }
 
             } catch (JSONException e) {
@@ -233,7 +264,6 @@ public class AllMoviesFragment extends Fragment {
                 Log.d(LOG_TAG, "movieList is empty");
             }
 
-            //return (String[]) movieList.toArray();
             return kvPair;
         }
     }

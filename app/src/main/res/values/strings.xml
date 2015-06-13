@@ -7,9 +7,9 @@
 
     <string name="movie_sort_key">sorting_type</string>
     <string name="movie_sort_title">Sort movies by</string>
-    <string name="movie_sort_default">popular</string>
+    <string name="movie_sort_default">popularity</string>
     <string-array name="movie_sorting_keys">
-        <item>popular</item>
+        <item>popularity</item>
         <item>high_rated</item>
     </string-array>
     <string-array name="movie_sort_entries">

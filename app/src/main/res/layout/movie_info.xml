@@ -2,21 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_weight="1"
     android:orientation="vertical"
-    android:layout_weight="1">
+    android:layout_gravity="center_horizontal">
 
     <ImageView
-        android:layout_weight="1"
         android:id="@+id/movie_poster"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:src="@drawable/interstellar" />
 
     <TextView
         android:id="@+id/movie_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="22sp" />
+        android:layout_gravity="center_horizontal"
+        android:text="Interstellar"
+        android:textSize="22sp"
+        android:textAlignment="center"/>
 
 </LinearLayout>
