@@ -1,4 +1,4 @@
-package az.aldoziflaj.popmovies.apiclient;
+package az.aldoziflaj.popmovies;
 
 /**
  * Created by aziflaj on 6/13/15.
@@ -7,6 +7,7 @@ public interface ApiHelper {
     String API_KEY = "6e7da6d84d9ec6215cffd1c3e8924c87";
     String API_BASE_URL = "http://api.themoviedb.org/3/discover/movie";
     String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
+    String IMAGE_DEFAULT_SIZE = "w185";
 
     String ID_KEY = "id";
     String ORIGINAL_TITLE_KEY = "original_title";
