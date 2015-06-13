@@ -2,4 +2,6 @@
     <string name="app_name" translatable="false">PopMovies</string>
     <string name="greetings">Popular Movies</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_details">Details</string>
+    <string name="hello_world">Hello world!</string>
 </resources>

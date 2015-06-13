@@ -1,5 +1,6 @@
 package az.aldoziflaj.popmovies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.HashMap;
  * A placeholder fragment containing a simple view.
  */
 public class AllMoviesFragment extends Fragment {
+    public static final String LOG_TAG = AllMoviesFragment.class.getSimpleName();
     SimpleAdapter simpleAdapter;
 
     public AllMoviesFragment() {}
@@ -29,13 +31,16 @@ public class AllMoviesFragment extends Fragment {
 
         GridView moviesGridView = (GridView) rootView.findViewById(R.id.movies_gridview);
 
-        ArrayList<HashMap<String, String>> movieList = new ArrayList<>();
+        //*
+        // For testing only!
+        final ArrayList<HashMap<String, String>> movieList = new ArrayList<>();
         String[] moviesTitleList = {
                 "Interstellar",
                 "Jurasic World",
                 "Mad Max",
                 "Kingsman: The Secret Service"
         };
+
         int[] moviesPosterList = {
                 R.drawable.interstellar,
                 R.drawable.jurasic_world,
@@ -49,6 +54,7 @@ public class AllMoviesFragment extends Fragment {
             tmpMovie.put("image", Integer.toString(moviesPosterList[i]));
             movieList.add(tmpMovie);
         }
+        //*/
 
         simpleAdapter = new SimpleAdapter(
                 getActivity(),
@@ -62,7 +68,10 @@ public class AllMoviesFragment extends Fragment {
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "Hello", Toast.LENGTH_LONG).show();
+                String movieTitle = (String) ((TextView) view.findViewById(R.id.movie_title_textview)).getText();
+                Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+                detailsIntent.putExtra("movie_title", movieTitle);
+                startActivity(detailsIntent);
             }
         });
 
