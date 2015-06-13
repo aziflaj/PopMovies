@@ -1,4 +1,4 @@
-package az.aldoziflaj.popmovies;
+package az.aldoziflaj.popmovies.apiclient;
 
 /**
  * Created by aziflaj on 6/13/15.
