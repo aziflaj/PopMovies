@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 public class MovieAdapter extends SimpleAdapter {
-    public static final String MOVIE_TITLE = "title";
-    public static final String MOVIE_POSTER = "poster";
 
     private Context appContext;
     private LayoutInflater inflater;
@@ -41,13 +39,13 @@ public class MovieAdapter extends SimpleAdapter {
         TextView titleTextView = (TextView) convertView.findViewById(R.id.movie_title_textview);
         ImageView posterImageView = (ImageView) convertView.findViewById(R.id.movie_poster);
 
-        String movieTitle = data.get(MOVIE_TITLE);
-        String moviePoster = data.get(MOVIE_POSTER);
+        String movieTitle = data.get(Constants.Movie.MOVIE_TITLE);
+        String moviePoster = data.get(Constants.Movie.MOVIE_POSTER);
 
         titleTextView.setText(movieTitle);
 
-        Uri imageUri = Uri.parse(ApiHelper.IMAGE_BASE_URL).buildUpon()
-                .appendPath(ApiHelper.IMAGE_DEFAULT_SIZE)
+        Uri imageUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
+                .appendPath(Constants.Api.IMAGE_DEFAULT_SIZE)
                 .appendPath(moviePoster.substring(1))
                 .build();
 

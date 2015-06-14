@@ -27,19 +27,28 @@ public class MovieDetailsFragment extends Fragment {
 
         TextView detailsTitle = (TextView) rootView.findViewById(R.id.details_movie_title);
         ImageView detailsPoster = (ImageView) rootView.findViewById(R.id.details_movie_poster);
+        TextView detailsRating = (TextView) rootView.findViewById(R.id.movie_rating);
+        TextView detailsReleaseDate = (TextView) rootView.findViewById(R.id.movie_release_date);
+        TextView detailsOverview = (TextView) rootView.findViewById(R.id.movie_description);
 
-        String title = getActivity().getIntent().getStringExtra("movie_title");
-        String image = getActivity().getIntent().getStringExtra("movie_poster");
+        String title = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_TITLE);
+        String poster = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_POSTER);
+        String rating = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_RATING);
+        String releaseDate = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_RELEASE_DATE);
+        String overview = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_OVERVIEW);
 
-        Uri imageUri = Uri.parse(ApiHelper.IMAGE_BASE_URL).buildUpon()
-                .appendPath(ApiHelper.IMAGE_DEFAULT_SIZE)
-                .appendPath(image.substring(1))
+        Uri posterUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
+                .appendPath(Constants.Api.IMAGE_DEFAULT_SIZE)
+                .appendPath(poster.substring(1))
                 .build();
 
+        Picasso.with(getActivity()).load(posterUri).into(detailsPoster);
+        detailsOverview.setText(overview);
         detailsTitle.setText(title);
-        Picasso.with(getActivity()).load(imageUri).into(detailsPoster);
+        detailsRating.setText(rating);
+        detailsReleaseDate.setText(releaseDate);
 
-        Log.d("MovieDetailsFragment", image);
+        Log.d("MovieDetailsFragment", overview);
 
         return rootView;
     }
