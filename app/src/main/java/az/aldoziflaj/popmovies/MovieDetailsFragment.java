@@ -3,7 +3,6 @@ package az.aldoziflaj.popmovies;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ public class MovieDetailsFragment extends Fragment {
         String poster = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_POSTER);
         String rating = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_RATING);
         String releaseDate = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_RELEASE_DATE);
+        String totalVotes = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_TOTAL_VOTES);
         String overview = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_OVERVIEW);
 
         Uri posterUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
@@ -45,10 +45,8 @@ public class MovieDetailsFragment extends Fragment {
         Picasso.with(getActivity()).load(posterUri).into(detailsPoster);
         detailsOverview.setText(overview);
         detailsTitle.setText(title);
-        detailsRating.setText(rating);
-        detailsReleaseDate.setText(releaseDate);
-
-        Log.d("MovieDetailsFragment", overview);
+        detailsRating.setText(String.format(Constants.StringFormats.ratings, rating, totalVotes));
+        detailsReleaseDate.setText(String.format(Constants.StringFormats.releaseDate, releaseDate));
 
         return rootView;
     }

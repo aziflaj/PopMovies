@@ -96,6 +96,7 @@ public class AllMoviesFragment extends Fragment {
                 String moviePoster = itemClicked.get(Constants.Movie.MOVIE_POSTER);
                 String movieReleaseDate = itemClicked.get(Constants.Movie.MOVIE_RELEASE_DATE);
                 String movieRating = itemClicked.get(Constants.Movie.MOVIE_RATING);
+                String movieTotalVotes = itemClicked.get(Constants.Movie.MOVIE_TOTAL_VOTES);
                 String movieOverview = itemClicked.get(Constants.Movie.MOVIE_OVERVIEW);
 
                 Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
@@ -103,6 +104,7 @@ public class AllMoviesFragment extends Fragment {
                 detailsIntent.putExtra(Constants.Movie.MOVIE_POSTER, moviePoster);
                 detailsIntent.putExtra(Constants.Movie.MOVIE_RELEASE_DATE, movieReleaseDate);
                 detailsIntent.putExtra(Constants.Movie.MOVIE_RATING, movieRating);
+                detailsIntent.putExtra(Constants.Movie.MOVIE_TOTAL_VOTES, movieTotalVotes);
                 detailsIntent.putExtra(Constants.Movie.MOVIE_OVERVIEW, movieOverview);
 
                 startActivity(detailsIntent);
@@ -262,12 +264,26 @@ public class AllMoviesFragment extends Fragment {
                     JSONObject currentMovie = jsonMovieList.getJSONObject(i);
                     HashMap<String, String> item = new HashMap<>();
                     //get the movie data from the JSON response
-                    item.put(Constants.Movie.MOVIE_ID, currentMovie.getString(Constants.Api.ID_KEY));
-                    item.put(Constants.Movie.MOVIE_TITLE, currentMovie.getString(Constants.Api.ORIGINAL_TITLE_KEY));
-                    item.put(Constants.Movie.MOVIE_POSTER, currentMovie.getString(Constants.Api.POSTER_PATH_KEY));
-                    item.put(Constants.Movie.MOVIE_RATING, currentMovie.getString(Constants.Api.VOTE_AVERAGE_KEY));
-                    item.put(Constants.Movie.MOVIE_RELEASE_DATE, currentMovie.getString(Constants.Api.RELEASE_DATE_KEY));
-                    item.put(Constants.Movie.MOVIE_OVERVIEW, currentMovie.getString(Constants.Api.OVERVIEW_KEY));
+                    item.put(Constants.Movie.MOVIE_ID,
+                            currentMovie.getString(Constants.Api.ID_KEY));
+
+                    item.put(Constants.Movie.MOVIE_TITLE,
+                            currentMovie.getString(Constants.Api.ORIGINAL_TITLE_KEY));
+
+                    item.put(Constants.Movie.MOVIE_POSTER,
+                            currentMovie.getString(Constants.Api.POSTER_PATH_KEY));
+
+                    item.put(Constants.Movie.MOVIE_RATING,
+                            currentMovie.getString(Constants.Api.VOTE_AVERAGE_KEY));
+
+                    item.put(Constants.Movie.MOVIE_TOTAL_VOTES,
+                            currentMovie.getString(Constants.Api.TOTAL_VOTES_KEY));
+
+                    item.put(Constants.Movie.MOVIE_RELEASE_DATE,
+                            releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
+
+                    item.put(Constants.Movie.MOVIE_OVERVIEW,
+                            currentMovie.getString(Constants.Api.OVERVIEW_KEY));
 
                     kvPair.add(item);
                 }
@@ -279,5 +295,18 @@ public class AllMoviesFragment extends Fragment {
 
             return kvPair;
         }
+
+        private String releaseDateFormatter(String unformattedDate) {
+            StringBuilder sb = new StringBuilder();
+            String[] explodedDate = unformattedDate.split("-");
+
+            sb.append(explodedDate[2])                  //day of month
+                .append("/").append(explodedDate[1])    //month
+                .append("/").append(explodedDate[0]);   //year
+
+            //Log.d(LOG_TAG, sb.toString());
+            return sb.toString();
+        }
+
     }
 }

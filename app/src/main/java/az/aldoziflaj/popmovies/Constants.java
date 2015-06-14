@@ -14,6 +14,7 @@ public class Constants {
         public static final String RELEASE_DATE_KEY = "release_date";
         public static final String POSTER_PATH_KEY = "poster_path";
         public static final String VOTE_AVERAGE_KEY = "vote_average";
+        public static final String TOTAL_VOTES_KEY = "vote_count";
         public static final String OVERVIEW_KEY = "overview";
         public static final String SORT_KEY = "overview";
         public static final String API_KEY_QUERY = "api_key";
@@ -30,7 +31,13 @@ public class Constants {
         public static final String MOVIE_POSTER = "movie_poster";
         public static final String MOVIE_RELEASE_DATE = "movie_release_date";
         public static final String MOVIE_RATING = "movie_rating";
+        public static final String MOVIE_TOTAL_VOTES = "movie_total_votes";
         public static final String MOVIE_OVERVIEW = "movie_overview";
+    }
+
+    public class StringFormats {
+        public static final String ratings = "%s/10 (%s) votes";
+        public static final String releaseDate = "Released on %s";
     }
 
 }

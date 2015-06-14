@@ -9,7 +9,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
 
         <ImageView
             android:id="@+id/details_movie_poster"
@@ -25,19 +27,27 @@
             <TextView
                 android:id="@+id/details_movie_title"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/movie_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8.4 of 10" />
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="8dp"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/movie_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10/20/2015" />
+                android:fontFamily="sans-serif-medium"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -47,6 +57,6 @@
         android:id="@+id/movie_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description" />
+        android:fontFamily="sans-serif-medium" />
 
 </LinearLayout>
