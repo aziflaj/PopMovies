@@ -35,6 +35,7 @@ import java.util.HashMap;
 
 /**
  * A placeholder fragment containing a simple view.
+ * udacity-ux branch
  */
 public class AllMoviesFragment extends Fragment {
     public static final String LOG_TAG = AllMoviesFragment.class.getSimpleName();
