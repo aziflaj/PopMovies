@@ -2,22 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingTop="8dp"
     tools:context=".MainActivityFragment">
 
     <GridView
         android:id="@+id/movies_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:horizontalSpacing="10dp"
+        android:horizontalSpacing="0dp"
         android:numColumns="2"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp">
+        android:verticalSpacing="0dp">
 
     </GridView>
-
 
 </FrameLayout>

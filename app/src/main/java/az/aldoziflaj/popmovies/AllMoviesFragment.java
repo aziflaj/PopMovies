@@ -35,7 +35,6 @@ import java.util.HashMap;
 
 /**
  * A placeholder fragment containing a simple view.
- * udacity-ux branch
  */
 public class AllMoviesFragment extends Fragment {
     public static final String LOG_TAG = AllMoviesFragment.class.getSimpleName();
@@ -83,9 +82,9 @@ public class AllMoviesFragment extends Fragment {
         movieAdapter = new MovieAdapter(
                 getActivity(),
                 movieList, // list of data to show
-                R.layout.movie_info, // the layout of a single item
-                new String[]{Constants.Movie.MOVIE_TITLE, Constants.Movie.MOVIE_POSTER},
-                new int[]{R.id.movie_title_textview, R.id.movie_poster});
+                R.layout.movie_poster, // the layout of a single item
+                new String[]{ Constants.Movie.MOVIE_POSTER },
+                new int[]{ R.id.movie_poster });
 
         moviesGridView.setAdapter(movieAdapter);
 
@@ -143,6 +142,8 @@ public class AllMoviesFragment extends Fragment {
                 getString(R.string.movie_sort_key),
                 getString(R.string.movie_sort_default));
 
+        Log.d(LOG_TAG, sortOrder);
+
         FetchMoviesTask task = new FetchMoviesTask();
         task.execute(sortOrder);
     }
@@ -181,6 +182,9 @@ public class AllMoviesFragment extends Fragment {
                         .appendQueryParameter(Constants.Api.SORT_KEY, sortOrder)
                         .appendQueryParameter(Constants.Api.API_KEY_QUERY, Constants.Api.API_KEY)
                         .build();
+
+                Log.d(LOG_TAG, moviesUri.toString());
+
                 URL url = new URL(moviesUri.toString());
 
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -245,9 +249,9 @@ public class AllMoviesFragment extends Fragment {
             movieAdapter = new MovieAdapter(
                     getActivity(),
                     movieList, // list of data to show
-                    R.layout.movie_info, // the layout of a single item
-                    new String[]{Constants.Movie.MOVIE_TITLE, Constants.Movie.MOVIE_POSTER},
-                    new int[]{R.id.movie_title_textview, R.id.movie_poster}
+                    R.layout.movie_poster, // the layout of a single item
+                    new String[]{ Constants.Movie.MOVIE_POSTER },
+                    new int[]{ R.id.movie_poster }
             );
 
             moviesGridView.setAdapter(movieAdapter);

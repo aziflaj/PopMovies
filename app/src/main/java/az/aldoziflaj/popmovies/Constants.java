@@ -16,7 +16,7 @@ public class Constants {
         public static final String VOTE_AVERAGE_KEY = "vote_average";
         public static final String TOTAL_VOTES_KEY = "vote_count";
         public static final String OVERVIEW_KEY = "overview";
-        public static final String SORT_KEY = "overview";
+        public static final String SORT_KEY = "sortby";
         public static final String API_KEY_QUERY = "api_key";
 
         public static final String SORT_BY_POPULARITY = "popularity.desc";
