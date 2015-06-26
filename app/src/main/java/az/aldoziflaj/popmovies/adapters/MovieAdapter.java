@@ -1,4 +1,4 @@
-package az.aldoziflaj.popmovies;
+package az.aldoziflaj.popmovies.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import az.aldoziflaj.popmovies.Constants;
+import az.aldoziflaj.popmovies.R;
 
 public class MovieAdapter extends SimpleAdapter {
 
@@ -46,7 +49,9 @@ public class MovieAdapter extends SimpleAdapter {
         //Log.d("MovieAdapter", imageUri.toString());
 
 
-        Picasso.with(appContext).load(imageUri).into(posterImageView);
+        Picasso.with(appContext).load(imageUri)
+                .placeholder(R.drawable.loading)
+                .into(posterImageView);
 
         return convertView;
     }

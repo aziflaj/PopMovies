@@ -1,4 +1,4 @@
-package az.aldoziflaj.popmovies;
+package az.aldoziflaj.popmovies.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -32,6 +32,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import az.aldoziflaj.popmovies.Constants;
+import az.aldoziflaj.popmovies.adapters.MovieAdapter;
+import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
+import az.aldoziflaj.popmovies.R;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -53,9 +58,9 @@ public class AllMoviesFragment extends Fragment {
 
         moviesGridView = (GridView) rootView.findViewById(R.id.movies_gridview);
 
+        movieList = new ArrayList<>();
         /*
         // For testing only!
-        movieList = new ArrayList<>();
         String[] moviesTitleList = {
                 "Interstellar",
                 "Jurasic World",
@@ -72,13 +77,12 @@ public class AllMoviesFragment extends Fragment {
 
         for (int i=0; i<4; i++) {
             HashMap<String, String> tmpMovie = new HashMap<>();
-            tmpMovie.put(MovieAdapter.MOVIE_TITLE, moviesTitleList[i]);
-            tmpMovie.put(MovieAdapter.MOVIE_POSTER, moviesPosterList[i]);
+            tmpMovie.put(Constants.Movie.MOVIE_TITLE, moviesTitleList[i]);
+            tmpMovie.put(Constants.Movie.MOVIE_POSTER, moviesPosterList[i]);
             movieList.add(tmpMovie);
         }
         //*/
 
-        movieList = new ArrayList<>();
         movieAdapter = new MovieAdapter(
                 getActivity(),
                 movieList, // list of data to show

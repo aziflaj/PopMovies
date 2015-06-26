@@ -1,4 +1,4 @@
-package az.aldoziflaj.popmovies;
+package az.aldoziflaj.popmovies.activities;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -6,20 +6,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import az.aldoziflaj.popmovies.R;
 
-public class MovieDetailsActivity extends ActionBarActivity {
+
+public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        setContentView(R.layout.activity_main);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_details, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

@@ -1,4 +1,4 @@
-package az.aldoziflaj.popmovies;
+package az.aldoziflaj.popmovies.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import az.aldoziflaj.popmovies.Constants;
+import az.aldoziflaj.popmovies.R;
 
 
 /**
@@ -42,7 +45,10 @@ public class MovieDetailsFragment extends Fragment {
                 .appendPath(poster.substring(1))
                 .build();
 
-        Picasso.with(getActivity()).load(posterUri).into(detailsPoster);
+        Picasso.with(getActivity()).load(posterUri)
+                .placeholder(R.drawable.loading)
+                .into(detailsPoster);
+
         detailsOverview.setText(overview);
         detailsTitle.setText(title);
         detailsRating.setText(String.format(Constants.StringFormats.ratings, rating, totalVotes));

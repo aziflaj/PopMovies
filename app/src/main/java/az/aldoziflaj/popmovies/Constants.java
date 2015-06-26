@@ -1,6 +1,6 @@
 package az.aldoziflaj.popmovies;
 
-public class Constants {
+public final class Constants {
 
     public class Api {
         public static final String API_KEY = "6e7da6d84d9ec6215cffd1c3e8924c87";
@@ -21,8 +21,6 @@ public class Constants {
 
         public static final String SORT_BY_POPULARITY = "popularity.desc";
         public static final String SORT_BY_VOTES = "vote_average.desc";
-
-        protected Api() {}
     }
 
     public class Movie {
@@ -36,7 +34,7 @@ public class Constants {
     }
 
     public class StringFormats {
-        public static final String ratings = "%s/10 (%s) votes";
+        public static final String ratings = "%s/10 (%s votes)";
         public static final String releaseDate = "Released on %s";
     }
 
