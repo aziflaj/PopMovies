@@ -12,3 +12,4 @@ Consider using:
   - [Gson](https://github.com/google/gson) for JSON processing
   - [Realm](https://realm.io/docs/java) instead of SQLite
   - [OkHttp](http://square.github.io/okhttp/) as HTTP Client
+  - [Retrofit](http://square.github.io/retrofit/) as REST client (since https://www.tmdb.org/ has a RESTful API)
