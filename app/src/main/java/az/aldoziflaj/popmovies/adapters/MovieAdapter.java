@@ -2,6 +2,7 @@ package az.aldoziflaj.popmovies.adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,12 +43,11 @@ public class MovieAdapter extends SimpleAdapter {
         String moviePoster = data.get(Constants.Movie.MOVIE_POSTER);
 
         Uri imageUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
-                .appendPath(Constants.Api.IMAGE_DEFAULT_SIZE)
+                .appendPath(Constants.Api.IMAGE_SIZE_MEDIUM)
                 .appendPath(moviePoster.substring(1))
                 .build();
 
-        //Log.d("MovieAdapter", imageUri.toString());
-
+        Log.d("MovieAdapter", imageUri.toString());
 
         Picasso.with(appContext).load(imageUri)
                 .placeholder(R.drawable.loading)

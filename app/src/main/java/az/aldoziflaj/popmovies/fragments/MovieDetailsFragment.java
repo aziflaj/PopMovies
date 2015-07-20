@@ -15,12 +15,9 @@ import az.aldoziflaj.popmovies.Constants;
 import az.aldoziflaj.popmovies.R;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MovieDetailsFragment extends Fragment {
 
-    public MovieDetailsFragment() {}
+    public MovieDetailsFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

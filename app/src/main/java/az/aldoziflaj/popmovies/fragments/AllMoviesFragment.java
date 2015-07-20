@@ -33,14 +33,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import az.aldoziflaj.popmovies.Constants;
-import az.aldoziflaj.popmovies.adapters.MovieAdapter;
-import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
 import az.aldoziflaj.popmovies.R;
+import az.aldoziflaj.popmovies.Utility;
+import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
+import az.aldoziflaj.popmovies.adapters.MovieAdapter;
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 public class AllMoviesFragment extends Fragment {
     public static final String LOG_TAG = AllMoviesFragment.class.getSimpleName();
     ArrayList<HashMap<String, String>> movieList;
@@ -87,8 +84,8 @@ public class AllMoviesFragment extends Fragment {
                 getActivity(),
                 movieList, // list of data to show
                 R.layout.movie_poster, // the layout of a single item
-                new String[]{ Constants.Movie.MOVIE_POSTER },
-                new int[]{ R.id.movie_poster });
+                new String[]{Constants.Movie.MOVIE_POSTER},
+                new int[]{R.id.movie_poster});
 
         moviesGridView.setAdapter(movieAdapter);
 
@@ -167,14 +164,16 @@ public class AllMoviesFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            String sortOrder = null;
-            if (params.length != 0) {
-                if (params[0].equals(getString(R.string.movie_sort_default))) {
-                    sortOrder = Constants.Api.SORT_BY_POPULARITY;
-                } else {
-                    sortOrder = Constants.Api.SORT_BY_VOTES;
-                }
+            if (params.length == 0) {
+                Log.e(LOG_TAG, "Why is this called without params?!");
+                return null;
+            }
 
+            String sortOrder;
+            if (params[0].equals(getString(R.string.movie_sort_default))) {
+                sortOrder = Constants.Api.SORT_BY_POPULARITY;
+            } else {
+                sortOrder = Constants.Api.SORT_BY_VOTES;
             }
 
             HttpURLConnection urlConnection = null;
@@ -204,12 +203,11 @@ public class AllMoviesFragment extends Fragment {
                 }
 
                 if (sb.length() == 0) {
-                    Log.d(LOG_TAG, "length of message 0");
+                    Log.d(LOG_TAG, "No response from the server");
                     return null;
                 }
 
                 moviesJSONString = sb.toString();
-                //fetchMovieListFromJSON(moviesJSONString);
 
             } catch (MalformedURLException e) {
                 Log.e(LOG_TAG, "Error: " + e.getMessage());
@@ -244,7 +242,7 @@ public class AllMoviesFragment extends Fragment {
             }
 
             movieList = fetchMovieListFromJSON(moviesJsonString);
-            Log.d(LOG_TAG, "movielist updated");
+            Log.d(LOG_TAG, "movieList updated");
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
@@ -254,8 +252,8 @@ public class AllMoviesFragment extends Fragment {
                     getActivity(),
                     movieList, // list of data to show
                     R.layout.movie_poster, // the layout of a single item
-                    new String[]{ Constants.Movie.MOVIE_POSTER },
-                    new int[]{ R.id.movie_poster }
+                    new String[]{Constants.Movie.MOVIE_POSTER},
+                    new int[]{R.id.movie_poster}
             );
 
             moviesGridView.setAdapter(movieAdapter);
@@ -272,6 +270,7 @@ public class AllMoviesFragment extends Fragment {
                 for (int i = 0; i < movieListLength; i++) {
                     JSONObject currentMovie = jsonMovieList.getJSONObject(i);
                     HashMap<String, String> item = new HashMap<>();
+
                     //get the movie data from the JSON response
                     item.put(Constants.Movie.MOVIE_ID,
                             currentMovie.getString(Constants.Api.ID_KEY));
@@ -289,7 +288,8 @@ public class AllMoviesFragment extends Fragment {
                             currentMovie.getString(Constants.Api.TOTAL_VOTES_KEY));
 
                     item.put(Constants.Movie.MOVIE_RELEASE_DATE,
-                            releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
+                            //releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
+                            Utility.releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
 
                     item.put(Constants.Movie.MOVIE_OVERVIEW,
                             currentMovie.getString(Constants.Api.OVERVIEW_KEY));
@@ -310,8 +310,8 @@ public class AllMoviesFragment extends Fragment {
             String[] explodedDate = unformattedDate.split("-");
 
             sb.append(explodedDate[2])                  //day of month
-                .append("/").append(explodedDate[1])    //month
-                .append("/").append(explodedDate[0]);   //year
+                    .append("/").append(explodedDate[1])    //month
+                    .append("/").append(explodedDate[0]);   //year
 
             //Log.d(LOG_TAG, sb.toString());
             return sb.toString();
