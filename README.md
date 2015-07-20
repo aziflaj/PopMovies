@@ -8,7 +8,7 @@ Should be done:
   - Write a Content Provider
 
 Consider using:
-  - [Fresco](http://frescolib.org/) for image loading
+  - ~~[Fresco](http://frescolib.org/) for image loading~~
   - [Gson](https://github.com/google/gson) for JSON processing
   - [Realm](https://realm.io/docs/java) instead of SQLite
   - [OkHttp](http://square.github.io/okhttp/) as HTTP Client
