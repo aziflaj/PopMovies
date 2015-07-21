@@ -1,5 +1,6 @@
 package az.aldoziflaj.popmovies.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
@@ -7,7 +8,12 @@ import android.test.AndroidTestCase;
 import java.util.HashSet;
 import java.util.Set;
 
+import az.aldoziflaj.popmovies.TestUtils;
 
+/**
+ * Test the database created by MovieDbHelper class.
+ * Test CRUD (Create, Read, Update, Delete)
+ */
 public class TestDb extends AndroidTestCase {
     public static final String LOG_TAG = TestDb.class.getSimpleName();
 
@@ -20,6 +26,9 @@ public class TestDb extends AndroidTestCase {
         dropDatabase();
     }
 
+    /**
+     * Test if the database is created correctly and the table(s) have the necessary columns
+     */
     public void testDbCreation() {
         Set<String> tableNames = new HashSet<>();
         tableNames.add(MovieContract.MovieTable.TABLE_NAME); //the table to check if created
@@ -64,6 +73,37 @@ public class TestDb extends AndroidTestCase {
         assertTrue("Some columns not created on " + MovieContract.MovieTable.TABLE_NAME + " table",
                 movieTableCols.isEmpty());
 
+        db.close();
+    }
+
+    /**
+     * Test if the inserted data corresponds with the same data read from the table
+     */
+    public void testInsertion() {
+        SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
+
+        //insert into the table
+        ContentValues insertedValues = TestUtils.createStubMovie();
+        long insertedId = db.insert(MovieContract.MovieTable.TABLE_NAME, null, insertedValues);
+        assertTrue("Values not inserted in the table", insertedId != -1);
+
+        //read the same data
+        Cursor cursor = db.query(
+                MovieContract.MovieTable.TABLE_NAME,
+                null, // columns to query
+                null, // columns to test (where)
+                null, // values to test
+                null, // group by
+                null, // columns to filter by row group
+                null // sort by rule
+        );
+
+        assertTrue("No data returned by the query", cursor.moveToFirst());
+
+        TestUtils.validateInsertedData("Data inserted and data read are not the same",
+                cursor, insertedValues);
+
+        cursor.close();
         db.close();
     }
 }
