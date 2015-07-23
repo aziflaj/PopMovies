@@ -6,50 +6,49 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import az.aldoziflaj.popmovies.Constants;
 import az.aldoziflaj.popmovies.R;
 
-public class MovieAdapter extends SimpleAdapter {
+public class MovieAdapter extends ArrayAdapter<String> {
 
-    private Context appContext;
-    private LayoutInflater inflater;
+    public static final String LOG_TAG = MovieAdapter.class.getSimpleName();
+    private Context mContext;
+    private List<String> mPosterUrlList;
+    private int mLayoutResource;
 
-    public MovieAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
-        super(context, data, resource, from, to);
-        this.appContext = context;
-        this.inflater = (LayoutInflater) appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public MovieAdapter(Context context, int resource, List<String> data) {
+        super(context, resource, data);
+        this.mContext = context;
+        this.mLayoutResource = resource;
+        this.mPosterUrlList = data;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.movie_poster, null);
         }
 
-        HashMap<String, String> data = (HashMap<String, String>) getItem(position);
-
         ImageView posterImageView = (ImageView) convertView.findViewById(R.id.movie_poster);
 
-        String moviePoster = data.get(Constants.Movie.MOVIE_POSTER);
+        String moviePoster = mPosterUrlList.get(position);
 
         Uri imageUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
                 .appendPath(Constants.Api.IMAGE_SIZE_MEDIUM)
                 .appendPath(moviePoster.substring(1))
                 .build();
 
-        Log.d("MovieAdapter", imageUri.toString());
+        Log.d(LOG_TAG + " - Image uri:", imageUri.toString());
 
-        Picasso.with(appContext).load(imageUri)
+        Picasso.with(mContext).load(imageUri)
                 .placeholder(R.drawable.loading)
                 .into(posterImageView);
 
