@@ -56,36 +56,12 @@ public class AllMoviesFragment extends Fragment {
         moviesGridView = (GridView) rootView.findViewById(R.id.movies_gridview);
 
         movieList = new ArrayList<>();
-        /*
-        // For testing only!
-        String[] moviesTitleList = {
-                "Interstellar",
-                "Jurasic World",
-                "Mad Max",
-                "Kingsman: The Secret Service"
-        };
 
-        String[] moviesPosterList = {
-                "/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg", //interstellar
-                "/uXZYawqUsChGSj54wcuBtEdUJbh.jpg", //jurasic world
-                "/kqjL17yufvn9OVLyXYpvtyrFfak.jpg", //mad max
-                "/oAISjx6DvR2yUn9dxj00vP8OcJJ.jpg" //kingsman
-        };
-
-        for (int i=0; i<4; i++) {
-            HashMap<String, String> tmpMovie = new HashMap<>();
-            tmpMovie.put(Constants.Movie.MOVIE_TITLE, moviesTitleList[i]);
-            tmpMovie.put(Constants.Movie.MOVIE_POSTER, moviesPosterList[i]);
-            movieList.add(tmpMovie);
-        }
-        //*/
-
+        // initialize an empty adapter
         movieAdapter = new MovieAdapter(
                 getActivity(),
-                movieList, // list of data to show
-                R.layout.movie_poster, // the layout of a single item
-                new String[]{Constants.Movie.MOVIE_POSTER},
-                new int[]{R.id.movie_poster});
+                R.layout.movie_poster,
+                new ArrayList<String>());
 
         moviesGridView.setAdapter(movieAdapter);
 
@@ -241,22 +217,28 @@ public class AllMoviesFragment extends Fragment {
                 return;
             }
 
-            movieList = fetchMovieListFromJSON(moviesJsonString);
+            // Get an ArrayList<HashMap> from JSON
+            //movieList = fetchMovieListFromJSON(moviesJsonString);
             Log.d(LOG_TAG, "movieList updated");
+
+            // Get a String[] of poster URLs from JSON
+            String[] posterUrlList = Utility.fetchPosterListFromJson(moviesJsonString);
+
+            if (posterUrlList == null) {
+                Log.e(LOG_TAG, "Poster list empty (?!)");
+                return;
+            }
 
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
 
-            movieAdapter = new MovieAdapter(
-                    getActivity(),
-                    movieList, // list of data to show
-                    R.layout.movie_poster, // the layout of a single item
-                    new String[]{Constants.Movie.MOVIE_POSTER},
-                    new int[]{R.id.movie_poster}
-            );
+            // Update the new movieAdapter
+            movieAdapter.clear();
+            for (String poster : posterUrlList) {
+                movieAdapter.add(poster);
+            }
 
-            moviesGridView.setAdapter(movieAdapter);
         }
 
         private ArrayList<HashMap<String, String>> fetchMovieListFromJSON(String jsonString) {
@@ -288,7 +270,6 @@ public class AllMoviesFragment extends Fragment {
                             currentMovie.getString(Constants.Api.TOTAL_VOTES_KEY));
 
                     item.put(Constants.Movie.MOVIE_RELEASE_DATE,
-                            //releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
                             Utility.releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
 
                     item.put(Constants.Movie.MOVIE_OVERVIEW,
@@ -303,18 +284,6 @@ public class AllMoviesFragment extends Fragment {
             }
 
             return kvPair;
-        }
-
-        private String releaseDateFormatter(String unformattedDate) {
-            StringBuilder sb = new StringBuilder();
-            String[] explodedDate = unformattedDate.split("-");
-
-            sb.append(explodedDate[2])                  //day of month
-                    .append("/").append(explodedDate[1])    //month
-                    .append("/").append(explodedDate[0]);   //year
-
-            //Log.d(LOG_TAG, sb.toString());
-            return sb.toString();
         }
 
     }
