@@ -17,6 +17,7 @@ public class Utility {
 
     /**
      * The method formats a date string from yyyy-MM-dd to dd/MM/yyyy
+     *
      * @param unformattedDate Unformated date from the cloud service
      * @return The formatted date
      */
@@ -33,6 +34,7 @@ public class Utility {
 
     /**
      * Th method fetches the list of poster URLs from the JSON response from the cloud
+     *
      * @param moviesJsonString The string-encoded JSON response
      * @return A String array of poster URLs
      */
