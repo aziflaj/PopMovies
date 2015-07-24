@@ -1,10 +1,11 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name" translatable="false">PopMovies</string>
     <string name="greetings">Popular Movies</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_details">Details</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- Settings key-value pairs -->
     <string name="movie_sort_key">sorting_type</string>
     <string name="movie_sort_title">Sort movies by</string>
     <string name="movie_sort_default">popularity</string>
@@ -17,5 +18,8 @@
         <item>Highest rated</item>
     </string-array>
 
+    <!-- String formats for detailed view -->
+    <string name="format_ratings"><xliff:g id="rating">%.1f</xliff:g>/10 (<xliff:g id="votes">%d</xliff:g> votes)</string>
+    <string name="format_release_date">Released on <xliff:g id="date">%s</xliff:g></string>
 
 </resources>

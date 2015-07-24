@@ -32,9 +32,9 @@ public class MovieDetailsFragment extends Fragment {
 
         String title = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_TITLE);
         String poster = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_POSTER);
-        String rating = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_RATING);
+        double rating = Double.parseDouble(getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_RATING));
         String releaseDate = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_RELEASE_DATE);
-        String totalVotes = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_TOTAL_VOTES);
+        int totalVotes = Integer.parseInt(getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_TOTAL_VOTES));
         String overview = getActivity().getIntent().getStringExtra(Constants.Movie.MOVIE_OVERVIEW);
 
         Uri posterUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
@@ -48,8 +48,12 @@ public class MovieDetailsFragment extends Fragment {
 
         detailsOverview.setText(overview);
         detailsTitle.setText(title);
-        detailsRating.setText(String.format(Constants.StringFormats.ratings, rating, totalVotes));
-        detailsReleaseDate.setText(String.format(Constants.StringFormats.releaseDate, releaseDate));
+
+        detailsRating.setText(
+                String.format(getActivity().getString(R.string.format_ratings), rating, totalVotes));
+
+        detailsReleaseDate.setText(
+                String.format(getActivity().getString(R.string.format_release_date), releaseDate));
 
         return rootView;
     }

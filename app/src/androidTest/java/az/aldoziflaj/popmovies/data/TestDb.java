@@ -11,7 +11,7 @@ import java.util.Set;
 import az.aldoziflaj.popmovies.TestUtils;
 
 /**
- * Test the database created by MovieDbHelper class.
+ * Test the database created by {@code MovieDbHelper} class.
  * Test CRUD (Create, Read, Update, Delete)
  */
 public class TestDb extends AndroidTestCase {

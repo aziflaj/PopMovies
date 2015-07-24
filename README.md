@@ -5,7 +5,7 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
 
 ## Consider using
   - ~~[Fresco](http://frescolib.org/) for image loading~~
-  - [Gson](https://github.com/google/gson) for JSON processing
+  - ~~[Gson](https://github.com/google/gson) for JSON processing~~
   - [Realm](https://realm.io/docs/java) instead of SQLite
-  - [OkHttp](http://square.github.io/okhttp/) as HTTP Client
-  - [Retrofit](http://square.github.io/retrofit/) as REST client (since https://www.tmdb.org/ has a RESTful API)
+  - ~~[OkHttp](http://square.github.io/okhttp/) as HTTP Client~~
+  - ~~[Retrofit](http://square.github.io/retrofit/) as REST client (since https://www.tmdb.org/ has a RESTful API)~~

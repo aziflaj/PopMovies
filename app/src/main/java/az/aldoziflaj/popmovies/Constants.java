@@ -40,13 +40,4 @@ public final class Constants {
         public static final String MOVIE_OVERVIEW = "movie_overview";
     }
 
-    /**
-     * String constants for formatting text output
-     */
-    //TODO: move to strings.xml
-    public class StringFormats {
-        public static final String ratings = "%s/10 (%s votes)";
-        public static final String releaseDate = "Released on %s";
-    }
-
 }

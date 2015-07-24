@@ -8,10 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -123,72 +119,17 @@ public class FetchMoviesTask extends AsyncTask<String, Void, String> {
         }
 
         // Get an ArrayList<HashMap> from JSON
-        //movieList = fetchMovieListFromJSON(moviesJsonString);
+        ArrayList<HashMap<String, String>> movieList = Utility.fetchMovieListFromJSON(moviesJsonString);
         Log.d(LOG_TAG, "movieList updated");
-
-        // Get a String[] of poster URLs from JSON
-        String[] posterUrlList = Utility.fetchPosterListFromJson(moviesJsonString);
-
-        if (posterUrlList == null) {
-            Log.e(LOG_TAG, "Poster list empty (?!)");
-            return;
-        }
 
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
 
-        // Update the new movieAdapter
+        // Update the movieAdapter
         mAdapter.clear();
-        for (String poster : posterUrlList) {
-            mAdapter.add(poster);
+        for (HashMap<String, String> item : movieList) {
+            mAdapter.add(item);
         }
-
     }
-
-    private ArrayList<HashMap<String, String>> fetchMovieListFromJSON(String jsonString) {
-        ArrayList<HashMap<String, String>> kvPair = new ArrayList<>();
-
-        try {
-            JSONArray jsonMovieList = (new JSONObject(jsonString)).getJSONArray("results");
-            int movieListLength = jsonMovieList.length();
-            Log.d(LOG_TAG, movieListLength + " items fetched");
-
-            for (int i = 0; i < movieListLength; i++) {
-                JSONObject currentMovie = jsonMovieList.getJSONObject(i);
-                HashMap<String, String> item = new HashMap<>();
-
-                //get the movie data from the JSON response
-                item.put(Constants.Movie.MOVIE_ID,
-                        currentMovie.getString(Constants.Api.ID_KEY));
-
-                item.put(Constants.Movie.MOVIE_TITLE,
-                        currentMovie.getString(Constants.Api.ORIGINAL_TITLE_KEY));
-
-                item.put(Constants.Movie.MOVIE_POSTER,
-                        currentMovie.getString(Constants.Api.POSTER_PATH_KEY));
-
-                item.put(Constants.Movie.MOVIE_RATING,
-                        currentMovie.getString(Constants.Api.VOTE_AVERAGE_KEY));
-
-                item.put(Constants.Movie.MOVIE_TOTAL_VOTES,
-                        currentMovie.getString(Constants.Api.TOTAL_VOTES_KEY));
-
-                item.put(Constants.Movie.MOVIE_RELEASE_DATE,
-                        Utility.releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
-
-                item.put(Constants.Movie.MOVIE_OVERVIEW,
-                        currentMovie.getString(Constants.Api.OVERVIEW_KEY));
-
-                kvPair.add(item);
-            }
-
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return kvPair;
-    }
-
 }
