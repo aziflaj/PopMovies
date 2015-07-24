@@ -1,6 +1,7 @@
 package az.aldoziflaj.popmovies.data;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -52,6 +53,16 @@ public class MovieContract {
         }
 
         /**
+         * Build a Uri for a record of the table, using the ID
+         *
+         * @param id The ID of the record
+         * @return A new Uri with the given ID appended to the end of the path
+         */
+        public static Uri buildMovieWithId(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        /**
          * This method does the opposite of {@code buildMovieWithPoster}, hence returns the
          * stringly-typed URL
          *
@@ -60,6 +71,16 @@ public class MovieContract {
          */
         public static String getPosterUrlFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
+        }
+
+        /**
+         * Parse the ID of a record, or return -1 instead
+         *
+         * @param uri The Uri of the record
+         * @return The Id of the record or -1 if this doesn't apply
+         */
+        public static long getIdFromUri(Uri uri) {
+            return ContentUris.parseId(uri);
         }
     }
 }

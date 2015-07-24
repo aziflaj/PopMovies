@@ -4,12 +4,13 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.test.AndroidTestCase;
 
 import az.aldoziflaj.popmovies.TestUtils;
 
 /**
- * TODO javadoc
+ * Test the MovieProvider
  */
 public class TestProvider extends AndroidTestCase {
 
@@ -51,18 +52,23 @@ public class TestProvider extends AndroidTestCase {
     /**
      * This method tests the {@code query()} method of the Content Provider
      */
-    public void testQuerying() {
+    public void testInsertionAndQuerying() {
         SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
+        UriMatcher matcher = MovieProvider.createUriMatcher();
 
-        //insert into the table
+        //insert into the table using the content provider
         ContentValues insertedValues = TestUtils.createStubMovie();
-        long insertedId = db.insert(MovieContract.MovieTable.TABLE_NAME, null, insertedValues);
-        assertTrue("Values not inserted in the table", insertedId != -1);
+        Uri insertedUri = mContext.getContentResolver().insert(MovieContract.MovieTable.CONTENT_URI, insertedValues);
+
+        long insertedId = MovieContract.MovieTable.getIdFromUri(insertedUri);
+        assertTrue("Values not inserted in the table", insertedId > 0);
+
+        assertEquals("insertedUri should have an ID",
+                MovieProvider.MOVIE_WITH_ID, matcher.match(insertedUri));
 
         //read the same data
         Cursor cursor = mContext.getContentResolver().query(
-                MovieContract.MovieTable.CONTENT_URI,
-                null, null, null, null);
+                insertedUri, null, null, null, null);
 
         assertTrue("No data returned by the query", cursor.moveToFirst());
 

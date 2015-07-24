@@ -5,13 +5,18 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.util.Log;
 
 public class MovieProvider extends ContentProvider {
+    public static final String LOG_TAG = MovieProvider.class.getSimpleName();
+
     public static final int MOVIE = 100;
     public static final int MOVIE_WITH_POSTER = 101;
+    public static final int MOVIE_WITH_ID = 102;
     private static final UriMatcher sUriMatcher = createUriMatcher();
     private SQLiteOpenHelper mOpenHelper;
 
@@ -25,6 +30,7 @@ public class MovieProvider extends ContentProvider {
         String authority = MovieContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, MovieContract.PATH_MOVIE, MOVIE);
+        matcher.addURI(authority, MovieContract.PATH_MOVIE + "/#", MOVIE_WITH_ID);
         matcher.addURI(authority, MovieContract.PATH_MOVIE + "/*", MOVIE_WITH_POSTER);
 
         return matcher;
@@ -51,39 +57,51 @@ public class MovieProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         int match = sUriMatcher.match(uri);
+        Cursor cursor;
 
         switch (match) {
-            case MOVIE: {
-                Cursor cursor = db.query(
+            case MOVIE:
+                cursor = db.query(
                         MovieContract.MovieTable.TABLE_NAME,
-                        projection, //columns
+                        projection,
                         selection,
                         selectionArgs,
                         null,
                         null,
                         sortOrder);
+                break;
 
-                return cursor;
-            }
-
-            case MOVIE_WITH_POSTER: {
+            case MOVIE_WITH_POSTER:
                 String posterUrl = MovieContract.MovieTable.getPosterUrlFromUri(uri);
-
-                Cursor cursor = db.query(
+                Log.d(LOG_TAG, "poster url: " + posterUrl);
+                cursor = db.query(
                         MovieContract.MovieTable.TABLE_NAME,
-                        projection, //columns
+                        projection,
                         MovieContract.MovieTable.COLUMN_IMAGE_URL + " = ?",
-                        new String[]{posterUrl}, //todo fix
+                        new String[]{posterUrl},
                         null,
                         null,
                         sortOrder);
+                break;
 
-                return cursor;
-            }
+            case MOVIE_WITH_ID:
+                long _id = MovieContract.MovieTable.getIdFromUri(uri);
+                cursor = db.query(
+                        MovieContract.MovieTable.TABLE_NAME,
+                        projection,
+                        MovieContract.MovieTable._ID + " = ?",
+                        new String[]{Long.toString(_id)},
+                        null,
+                        null,
+                        sortOrder);
+                break;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     /**
@@ -109,9 +127,36 @@ public class MovieProvider extends ContentProvider {
         }
     }
 
+    /**
+     * Insert a new movie into the table pointed by the Uri
+     *
+     * @param uri    The Uri that should point into a table
+     * @param values Record to add into the table
+     * @return A Content Uri with the ID of the inserted row
+     */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        Uri insertionUri;
+
+        switch (match) {
+            case MOVIE:
+                long insertedId = db.insert(MovieContract.MovieTable.TABLE_NAME, null, values);
+                if (insertedId > 0) {
+                    insertionUri = MovieContract.MovieTable.buildMovieWithId(insertedId);
+                } else {
+                    throw new SQLException("Failed to insert row into " + uri);
+                }
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri " + uri);
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return insertionUri;
     }
 
     @Override
