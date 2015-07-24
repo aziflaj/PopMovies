@@ -37,5 +37,29 @@ public class MovieContract {
         public static final String COLUMN_VOTE_COUNT = "vote_count";
         public static final String COLUMN_DESCRIPTION = "desc";
         public static final String COLUMN_IMAGE_URL = "image_url";
+
+
+        /**
+         * This method creates a URI for addressing a movie according to its poster URL
+         *
+         * @param posterUrl The stringly-typed URL fetched from the cloud service
+         * @return The URI with the given {@code posterUrl} appended
+         */
+        public static Uri buildMovieWithPoster(String posterUrl) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(posterUrl.substring(1)) //remove the heading slash
+                    .build();
+        }
+
+        /**
+         * This method does the opposite of {@code buildMovieWithPoster}, hence returns the
+         * stringly-typed URL
+         *
+         * @param uri The URI of the movie
+         * @return The poster URL fetched from the URI
+         */
+        public static String getPosterUrlFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
     }
 }

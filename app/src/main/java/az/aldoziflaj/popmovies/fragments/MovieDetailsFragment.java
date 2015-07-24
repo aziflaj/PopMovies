@@ -39,7 +39,7 @@ public class MovieDetailsFragment extends Fragment {
 
         Uri posterUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
                 .appendPath(Constants.Api.IMAGE_DEFAULT_SIZE)
-                .appendPath(poster.substring(1))
+                .appendPath(poster.substring(1)) //remove the heading slash
                 .build();
 
         Picasso.with(getActivity()).load(posterUri)
