@@ -161,12 +161,15 @@ public class MovieProvider extends ContentProvider {
     }
 
     /**
-     * TODO javadoc
+     * Deletes all the records in the table pointed by the URI and match the other args
      *
-     * @param uri
-     * @param selection
-     * @param selectionArgs
-     * @return
+     * @param uri           Uri of the table where to search the records to delete
+     * @param selection     A selection criteria to apply when filtering rows. If {@code null} then all
+     *                      rows are included.
+     * @param selectionArgs You may include ?s in selection, which will be replaced by the values
+     *                      from selectionArgs, in order that they appear in the selection. The values
+     *                      will be bound as Strings.
+     * @return The number of deleted rows
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -195,14 +198,18 @@ public class MovieProvider extends ContentProvider {
         return rowsDeleted;
     }
 
+
     /**
-     * TODO JavaDoc
+     * Updates a record on the table pointed by the URI.
      *
-     * @param uri
-     * @param values
-     * @param selection
-     * @param selectionArgs
-     * @return
+     * @param uri           Uri of the table where to search the records to update
+     * @param values        The new set of {@code ContentValues} to replace the old ones
+     * @param selection     A selection criteria to apply when filtering rows. If {@code null} then all
+     *                      rows are included.
+     * @param selectionArgs You may include ?s in selection, which will be replaced by the values
+     *                      from selectionArgs, in order that they appear in the selection. The values
+     *                      will be bound as Strings.
+     * @return The number of updated rows
      */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
@@ -228,6 +235,13 @@ public class MovieProvider extends ContentProvider {
         return rowsUpdated;
     }
 
+    /**
+     * This method is used for mass insertion into the database
+     *
+     * @param uri    The content:// URI of the insertion request.
+     * @param values An array of sets of column_name/value pairs to add to the database. This must not be null.
+     * @return The number of values that were inserted.
+     */
     @Override
     public int bulkInsert(Uri uri, @NonNull ContentValues[] values) {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();

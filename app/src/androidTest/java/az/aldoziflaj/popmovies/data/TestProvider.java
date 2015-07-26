@@ -135,20 +135,43 @@ public class TestProvider extends AndroidTestCase {
         db.close();
     }
 
-    /*
+    /**
+     * Delete ALL the records
+     * <a href="http://cdn.meme.am/instances/500x/53654088.jpg"></a>
+     */
     public void testDelete() {
         SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
 
         //insert into the table using the content provider
-        ContentValues insertedValues = TestUtils.createStubMovie();
-        mContext.getContentResolver().insert(MovieContract.MovieTable.CONTENT_URI, insertedValues);
+        ContentValues[] list = TestUtils.createStubMovieList();
+        if (list == null) {
+            fail("No items to insert into the DB");
+        }
+
+        int massInsertCount = getContext().getContentResolver().bulkInsert(
+                MovieContract.MovieTable.CONTENT_URI, list);
+
+        assertTrue("Some of the records not inserted", massInsertCount == list.length);
+
+        //delete a single item
+        int deleteOneRow = mContext.getContentResolver().delete(
+                MovieContract.MovieTable.CONTENT_URI,
+                MovieContract.MovieTable.COLUMN_TITLE + " = ?",
+                new String[]{list[0].getAsString(MovieContract.MovieTable.COLUMN_TITLE)}
+        );
+
+        assertEquals("Didn't delete a single row", 1, deleteOneRow);
+
+        // DELETE ALL THE RECORDS!
+        int deleted = mContext.getContentResolver().delete(MovieContract.MovieTable.CONTENT_URI, null, null);
+
+        assertEquals("Not all records deleted", list.length, deleted + deleteOneRow);
 
         db.close();
     }
-    //*/
 
     /**
-     * This method tests the {@code bulkInser()} method of the Content Provider
+     * This method tests the {@code bulkInsert()} method of the Content Provider
      */
     public void testMassInsertion() {
         SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
