@@ -116,7 +116,7 @@ public class TestProvider extends AndroidTestCase {
                 MovieContract.MovieTable.CONTENT_URI,
                 null, // get all columns
                 MovieContract.MovieTable.COLUMN_TITLE + " = ? ",
-                new String[]{ TestUtils.MOVIE_TITLE },
+                new String[]{TestUtils.MOVIE_TITLE},
                 null);
 
         assertTrue("No data queried", cursor.moveToFirst());
@@ -135,5 +135,53 @@ public class TestProvider extends AndroidTestCase {
         db.close();
     }
 
-    //public void testDelete() {}
+    /*
+    public void testDelete() {
+        SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
+
+        //insert into the table using the content provider
+        ContentValues insertedValues = TestUtils.createStubMovie();
+        mContext.getContentResolver().insert(MovieContract.MovieTable.CONTENT_URI, insertedValues);
+
+        db.close();
+    }
+    //*/
+
+    /**
+     * This method tests the {@code bulkInser()} method of the Content Provider
+     */
+    public void testMassInsertion() {
+        SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
+
+        ContentValues[] list = TestUtils.createStubMovieList();
+
+        if (list == null) {
+            fail("No item to mass insert");
+        }
+
+        int massInsertCount = getContext().getContentResolver().bulkInsert(
+                MovieContract.MovieTable.CONTENT_URI, list);
+
+        assertTrue("Some of the records not inserted", massInsertCount == list.length);
+
+        Cursor cursor = getContext().getContentResolver().query(
+                MovieContract.MovieTable.CONTENT_URI,
+                null, null, null, null);
+
+        assertTrue("Couldn't fetch anything from the DB", cursor.moveToFirst());
+        assertTrue("Couldn't fetch all records from the DB", cursor.getCount() == list.length);
+
+        int index = 0;
+        for (ContentValues item : list) {
+            TestUtils.validateInsertedData("Item " + index + " has errors", cursor, item);
+
+            index++;
+            if (index < list.length) {
+                cursor.moveToNext();
+            }
+        }
+
+        cursor.close();
+        db.close();
+    }
 }

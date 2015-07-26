@@ -9,6 +9,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 public class MovieProvider extends ContentProvider {
@@ -225,5 +226,32 @@ public class MovieProvider extends ContentProvider {
         }
 
         return rowsUpdated;
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, @NonNull ContentValues[] values) {
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int matcher = sUriMatcher.match(uri);
+
+        switch (matcher) {
+            case MOVIE:
+                db.beginTransaction();
+                int count = 0;
+
+                for (ContentValues item : values) {
+                    long _id = db.insert(MovieContract.MovieTable.TABLE_NAME, null, item);
+                    if (_id != -1) {
+                        count++;
+                    }
+                }
+                db.setTransactionSuccessful();
+                db.endTransaction();
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return count;
+
+            default:
+                return super.bulkInsert(uri, values);
+        }
     }
 }

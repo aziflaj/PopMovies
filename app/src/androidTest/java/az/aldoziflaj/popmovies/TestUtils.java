@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public class TestUtils extends AndroidTestCase {
     /**
      * Create a stub movie to test insertion into the DB
      *
-     * @return A ContentValues instance with the data for the movie
+     * @return A {@code ContentValues} instance with the data for the movie
      */
     public static ContentValues createStubMovie() {
         ContentValues cv = new ContentValues();
@@ -30,11 +31,8 @@ public class TestUtils extends AndroidTestCase {
                 Utility.releaseDateFormatter("2014-10-26"));
 
         cv.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, 8.8);
-
         cv.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT);
-
         cv.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, "lorem ipsum dolor");
-
         cv.put(MovieContract.MovieTable.COLUMN_IMAGE_URL, "/img_of_interstellar.jpg");
 
         return cv;
@@ -59,6 +57,39 @@ public class TestUtils extends AndroidTestCase {
             String value = cursor.getString(idx);
 
             assertEquals("Value read doesn't match the expected value" + errorMessage, expectedValue, value);
+        }
+
+    }
+
+    /**
+     * Creates a stub list of movies to test mass insertion into the DB
+     *
+     * @return A {@code ContentValues} array of movies
+     */
+    public static ContentValues[] createStubMovieList() {
+        ArrayList<ContentValues> contentValues = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            ContentValues cv = new ContentValues();
+
+            cv.put(MovieContract.MovieTable.COLUMN_TITLE, MOVIE_TITLE + i);
+            cv.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE,
+                    Utility.releaseDateFormatter("2014-10-26"));
+            cv.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, 6.8 + i);
+            cv.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT + i * 10);
+            cv.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, "lorem ipsum dolor");
+            cv.put(MovieContract.MovieTable.COLUMN_IMAGE_URL, "/img_of_interstellar.jpg");
+
+            contentValues.add(cv);
+        }
+
+        if (!contentValues.isEmpty()) {
+            ContentValues[] returnValues = new ContentValues[contentValues.size()];
+            contentValues.toArray(returnValues);
+
+            return returnValues;
+        } else {
+            return null;
         }
 
     }
