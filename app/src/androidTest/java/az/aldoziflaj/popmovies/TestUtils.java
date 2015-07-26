@@ -13,6 +13,8 @@ import az.aldoziflaj.popmovies.data.MovieContract;
  * Utility methods used for testing
  */
 public class TestUtils extends AndroidTestCase {
+    public static final String MOVIE_TITLE = "Interstellar";
+    public static final int MOVIE_VOTE_COUNT = 1234;
 
     /**
      * Create a stub movie to test insertion into the DB
@@ -22,14 +24,14 @@ public class TestUtils extends AndroidTestCase {
     public static ContentValues createStubMovie() {
         ContentValues cv = new ContentValues();
 
-        cv.put(MovieContract.MovieTable.COLUMN_TITLE, "Interstellar");
+        cv.put(MovieContract.MovieTable.COLUMN_TITLE, MOVIE_TITLE);
 
         cv.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE,
                 Utility.releaseDateFormatter("2014-10-26"));
 
         cv.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, 8.8);
 
-        cv.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, 1234);
+        cv.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT);
 
         cv.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, "lorem ipsum dolor");
 
