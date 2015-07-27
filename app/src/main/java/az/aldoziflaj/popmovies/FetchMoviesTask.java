@@ -54,7 +54,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, String> {
         }
 
         HttpURLConnection urlConnection = null;
-        String moviesJSONString = null;
+        String moviesJsonString = null;
         BufferedReader reader = null;
 
         try {
@@ -84,7 +84,9 @@ public class FetchMoviesTask extends AsyncTask<String, Void, String> {
                 return null;
             }
 
-            moviesJSONString = sb.toString();
+            moviesJsonString = sb.toString();
+
+            Utility.insertMoviesIntoDatabase(mContext, moviesJsonString);
 
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error: " + e.getMessage());
@@ -108,7 +110,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, String> {
             }
         }
 
-        return moviesJSONString;
+        return moviesJsonString;
     }
 
     @Override

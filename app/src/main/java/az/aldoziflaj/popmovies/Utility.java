@@ -1,5 +1,7 @@
 package az.aldoziflaj.popmovies;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -9,10 +11,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import az.aldoziflaj.popmovies.data.MovieContract;
+
 /**
  * A list of utility methods used through the application
  */
 public class Utility {
+    /*
+    TODO: merge fetchMovieListFromJSON(String jsonString) and insertMoviesIntoDatabase(Context context, String moviesJsonString)
+     */
 
     public static final String LOG = "Log";
 
@@ -112,5 +119,61 @@ public class Utility {
         }
 
         return kvPair;
+    }
+
+    /**
+     * Fetch a movie {@code ArrayList} from a JSON-encoded String and store it in the database
+     *
+     * @param context          The Application Context
+     * @param moviesJsonString The JSON-encoded string response from the Cloud service
+     */
+    public static void insertMoviesIntoDatabase(Context context, String moviesJsonString) {
+        ArrayList<ContentValues> cvList = new ArrayList<>();
+
+        try {
+            JSONArray jsonMovieList = (new JSONObject(moviesJsonString)).getJSONArray("results");
+            int movieListLength = jsonMovieList.length();
+            Log.d(LOG, movieListLength + " items fetched");
+
+            for (int i = 0; i < movieListLength; i++) {
+                JSONObject currentMovie = jsonMovieList.getJSONObject(i);
+                ContentValues item = new ContentValues();
+
+                //get the movie data from the JSON response
+                item.put(MovieContract.MovieTable.COLUMN_TITLE,
+                        currentMovie.getString(Constants.Api.ORIGINAL_TITLE_KEY));
+
+                item.put(MovieContract.MovieTable.COLUMN_IMAGE_URL,
+                        currentMovie.getString(Constants.Api.POSTER_PATH_KEY));
+
+                item.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE,
+                        currentMovie.getString(Constants.Api.VOTE_AVERAGE_KEY));
+
+                item.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT,
+                        currentMovie.getString(Constants.Api.TOTAL_VOTES_KEY));
+
+                item.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE,
+                        Utility.releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY)));
+
+                item.put(MovieContract.MovieTable.COLUMN_DESCRIPTION,
+                        currentMovie.getString(Constants.Api.OVERVIEW_KEY));
+
+                cvList.add(item);
+            }
+
+            ContentValues[] values = new ContentValues[cvList.size()];
+            cvList.toArray(values);
+            int itemsAdded = context.getContentResolver().bulkInsert(MovieContract.MovieTable.CONTENT_URI, values);
+
+            if (itemsAdded != movieListLength) {
+                Log.d(LOG, itemsAdded + " of " + movieListLength + " inserted");
+            } else {
+                Log.d(LOG, itemsAdded + " records added into the DB");
+            }
+
+        } catch (JSONException e) {
+            Log.e(LOG, "Error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
