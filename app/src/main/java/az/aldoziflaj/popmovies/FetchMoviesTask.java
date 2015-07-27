@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 import az.aldoziflaj.popmovies.adapters.MovieAdapter;
 
-public class FetchMoviesTask extends AsyncTask<String, Void, String> {
+public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<HashMap<String, String>>> {
     public final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
     Toast errorInConnection;
     ProgressDialog dialog;
@@ -40,7 +40,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected ArrayList<HashMap<String, String>> doInBackground(String... params) {
         if (params.length == 0) {
             Log.e(LOG_TAG, "Why is this called without params?!");
             return null;
@@ -86,8 +86,6 @@ public class FetchMoviesTask extends AsyncTask<String, Void, String> {
 
             moviesJsonString = sb.toString();
 
-            Utility.insertMoviesIntoDatabase(mContext, moviesJsonString);
-
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error: " + e.getMessage());
             return null;
@@ -110,18 +108,16 @@ public class FetchMoviesTask extends AsyncTask<String, Void, String> {
             }
         }
 
-        return moviesJsonString;
+        return Utility.fetchMovieListFromJSON(mContext, moviesJsonString);
     }
 
     @Override
-    protected void onPostExecute(String moviesJsonString) {
-        if (moviesJsonString == null) {
+    protected void onPostExecute(ArrayList<HashMap<String, String>> movieList) {
+        if (movieList == null) {
             errorInConnection.show();
             return;
         }
 
-        // Get an ArrayList<HashMap> from JSON
-        ArrayList<HashMap<String, String>> movieList = Utility.fetchMovieListFromJSON(moviesJsonString);
         Log.d(LOG_TAG, "movieList updated");
 
         if (dialog.isShowing()) {
