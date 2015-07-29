@@ -4,12 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import az.aldoziflaj.popmovies.data.MovieContract;
 
@@ -75,8 +76,8 @@ public class Utility {
      * @param jsonString The string-encoded JSON response
      * @return The {@code ArrayList<HashMap<String, String>>} with key-value pairs
      */
-    public static ArrayList<HashMap<String, String>> fetchMovieListFromJSON(Context context, String jsonString) {
-        ArrayList<HashMap<String, String>> kvPair = new ArrayList<>();
+    public static ArrayList<Movie> fetchMovieListFromJSON(Context context, String jsonString) {
+        ArrayList<Movie> movieList = new ArrayList<>();
         ArrayList<ContentValues> cvList = new ArrayList<>();
 
         try {
@@ -85,42 +86,37 @@ public class Utility {
             Log.d(LOG, movieListLength + " items fetched");
 
             for (int i = 0; i < movieListLength; i++) {
-                JSONObject currentMovie = jsonMovieList.getJSONObject(i);
-                HashMap<String, String> kvItem = new HashMap<>();
+                JSONObject currentJsonMovie = jsonMovieList.getJSONObject(i);
                 ContentValues cValues = new ContentValues();
+                Gson gson = new Gson();
+                Movie singleMovie = gson.fromJson(currentJsonMovie.toString(), Movie.class);
 
                 //get the movie data from the JSON response
                 //get the title
-                String title = currentMovie.getString(Constants.Api.ORIGINAL_TITLE_KEY);
-                kvItem.put(Constants.Movie.MOVIE_TITLE, title);
+                String title = currentJsonMovie.getString(Constants.Api.ORIGINAL_TITLE_KEY);
                 cValues.put(MovieContract.MovieTable.COLUMN_TITLE, title);
 
                 //get the poster url
-                String posterPath = currentMovie.getString(Constants.Api.POSTER_PATH_KEY);
-                kvItem.put(Constants.Movie.MOVIE_POSTER, posterPath);
+                String posterPath = currentJsonMovie.getString(Constants.Api.POSTER_PATH_KEY);
                 cValues.put(MovieContract.MovieTable.COLUMN_IMAGE_URL, posterPath);
 
                 //get the rating
-                double voteAverage = currentMovie.getDouble(Constants.Api.VOTE_AVERAGE_KEY);
-                kvItem.put(Constants.Movie.MOVIE_RATING, Double.toString(voteAverage));
+                double voteAverage = currentJsonMovie.getDouble(Constants.Api.VOTE_AVERAGE_KEY);
                 cValues.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, voteAverage);
 
                 //get the total number of votes
-                int totalVotes = currentMovie.getInt(Constants.Api.TOTAL_VOTES_KEY);
-                kvItem.put(Constants.Movie.MOVIE_TOTAL_VOTES, Integer.toString(totalVotes));
+                int totalVotes = currentJsonMovie.getInt(Constants.Api.TOTAL_VOTES_KEY);
                 cValues.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, totalVotes);
 
                 //get the movie release date
-                String releaseDate = Utility.releaseDateFormatter(currentMovie.getString(Constants.Api.RELEASE_DATE_KEY));
-                kvItem.put(Constants.Movie.MOVIE_RELEASE_DATE, releaseDate);
+                String releaseDate = Utility.releaseDateFormatter(currentJsonMovie.getString(Constants.Api.RELEASE_DATE_KEY));
                 cValues.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE, releaseDate);
 
                 //get the description of the movie
-                String description = currentMovie.getString(Constants.Api.OVERVIEW_KEY);
-                kvItem.put(Constants.Movie.MOVIE_OVERVIEW, description);
+                String description = currentJsonMovie.getString(Constants.Api.OVERVIEW_KEY);
                 cValues.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, description);
 
-                kvPair.add(kvItem);
+                movieList.add(singleMovie);
                 cvList.add(cValues);
             }
 
@@ -140,6 +136,6 @@ public class Utility {
             e.printStackTrace();
         }
 
-        return kvPair;
+        return movieList;
     }
 }

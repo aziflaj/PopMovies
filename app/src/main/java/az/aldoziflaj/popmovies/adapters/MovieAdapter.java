@@ -11,20 +11,20 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
 import java.util.List;
 
 import az.aldoziflaj.popmovies.Constants;
+import az.aldoziflaj.popmovies.Movie;
 import az.aldoziflaj.popmovies.R;
 
-public class MovieAdapter extends ArrayAdapter<HashMap<String, String>> {
+public class MovieAdapter extends ArrayAdapter<Movie> {
 
     public static final String LOG_TAG = MovieAdapter.class.getSimpleName();
     private Context mContext;
-    private List<HashMap<String, String>> mPosterUrlList;
+    private List<Movie> mPosterUrlList;
     private int mLayoutResource;
 
-    public MovieAdapter(Context context, int resource, List<HashMap<String, String>> data) {
+    public MovieAdapter(Context context, int resource, List<Movie> data) {
         super(context, resource, data);
         this.mContext = context;
         this.mLayoutResource = resource;
@@ -41,9 +41,9 @@ public class MovieAdapter extends ArrayAdapter<HashMap<String, String>> {
 
         ImageView posterImageView = (ImageView) convertView.findViewById(R.id.movie_poster);
 
-        HashMap<String, String> data = mPosterUrlList.get(position);
+        Movie currentMovie = mPosterUrlList.get(position);
 
-        String moviePoster = data.get(Constants.Movie.MOVIE_POSTER);
+        String moviePoster = currentMovie.getPosterPath();
 
         Uri imageUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
                 .appendPath(Constants.Api.IMAGE_SIZE_MEDIUM)
