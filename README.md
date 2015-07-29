@@ -20,7 +20,7 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
 
 ## Consider using
   - ~~[Fresco](http://frescolib.org/) for image loading~~
-  - [Gson](https://github.com/google/gson) for JSON processing
+  - :white_check_mark: ~~[Gson](https://github.com/google/gson) for JSON processing~~
   - [Realm](https://realm.io/docs/java) instead of SQLite
   - [OkHttp](http://square.github.io/okhttp/) as HTTP+SPDY Client
   - [Retrofit](http://square.github.io/retrofit/) as REST client
