@@ -16,10 +16,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import az.aldoziflaj.popmovies.Constants;
 import az.aldoziflaj.popmovies.FetchMoviesTask;
+import az.aldoziflaj.popmovies.Movie;
 import az.aldoziflaj.popmovies.R;
 import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
 import az.aldoziflaj.popmovies.adapters.MovieAdapter;
@@ -45,20 +45,20 @@ public class AllMoviesFragment extends Fragment {
         movieAdapter = new MovieAdapter(
                 getActivity(),
                 R.layout.movie_poster,
-                new ArrayList<HashMap<String, String>>());
+                new ArrayList<Movie>());
 
         moviesGridView.setAdapter(movieAdapter);
 
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String, String> itemClicked = movieAdapter.getItem(position);
-                String movieTitle = itemClicked.get(Constants.Movie.MOVIE_TITLE);
-                String moviePoster = itemClicked.get(Constants.Movie.MOVIE_POSTER);
-                String movieReleaseDate = itemClicked.get(Constants.Movie.MOVIE_RELEASE_DATE);
-                String movieRating = itemClicked.get(Constants.Movie.MOVIE_RATING);
-                String movieTotalVotes = itemClicked.get(Constants.Movie.MOVIE_TOTAL_VOTES);
-                String movieOverview = itemClicked.get(Constants.Movie.MOVIE_OVERVIEW);
+                Movie itemClicked = movieAdapter.getItem(position);
+                String movieTitle = itemClicked.getTitle();
+                String moviePoster = itemClicked.getPosterPath();
+                String movieReleaseDate = itemClicked.getReleaseDate();
+                double movieRating = itemClicked.getRating();
+                int movieTotalVotes = itemClicked.getVoteCount();
+                String movieOverview = itemClicked.getDescription();
 
                 Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
                 detailsIntent.putExtra(Constants.Movie.MOVIE_TITLE, movieTitle);
