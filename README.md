@@ -15,7 +15,7 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
   - Make the app responsive (Tablet support)
     - Show the selected item
   - Add the magic: Make the app syncable on the background
-  - Show notifications
+  - Show notifications (for what?)
 
 
 ## Consider using

@@ -26,5 +26,5 @@ dependencies {
     compile 'com.android.support:support-v4:22.2.0'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.code.gson:gson:1.7.2'
+    compile 'com.google.code.gson:gson:2.3'
 }

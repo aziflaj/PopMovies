@@ -1,12 +1,10 @@
 package az.aldoziflaj.popmovies;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,32 +12,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
-import az.aldoziflaj.popmovies.adapters.MovieAdapter;
-
-public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
+public class FetchMoviesTask extends AsyncTask<String, Void, Void> {
     public final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
-    Toast errorInConnection;
-    ProgressDialog dialog;
     Context mContext;
-    MovieAdapter mAdapter;
 
-    public FetchMoviesTask(Context context, MovieAdapter adapter) {
+    public FetchMoviesTask(Context context) {
         this.mContext = context;
-        this.mAdapter = adapter;
     }
 
     @Override
-    protected void onPreExecute() {
-        errorInConnection = Toast.makeText(mContext,
-                "Can't connect to the server",
-                Toast.LENGTH_LONG);
-        dialog = ProgressDialog.show(mContext, "Please wait", "Updating the movies");
-    }
-
-    @Override
-    protected ArrayList<Movie> doInBackground(String... params) {
+    protected Void doInBackground(String... params) {
         if (params.length == 0) {
             Log.e(LOG_TAG, "Why is this called without params?!");
             return null;
@@ -53,7 +36,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
         }
 
         HttpURLConnection urlConnection = null;
-        String moviesJsonString = null;
+        String moviesJsonString;
         BufferedReader reader = null;
 
         try {
@@ -84,6 +67,7 @@ public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
             }
 
             moviesJsonString = sb.toString();
+            Utility.storeJsonResponseMovies(mContext, moviesJsonString);
 
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error: " + e.getMessage());
@@ -106,27 +90,6 @@ public class FetchMoviesTask extends AsyncTask<String, Void, ArrayList<Movie>> {
                 }
             }
         }
-
-        return Utility.fetchMovieListFromJSON(mContext, moviesJsonString);
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<Movie> movieList) {
-        if (movieList == null) {
-            errorInConnection.show();
-            return;
-        }
-
-        Log.d(LOG_TAG, "movieList updated");
-
-        if (dialog.isShowing()) {
-            dialog.dismiss();
-        }
-
-        // Update the movieAdapter
-        mAdapter.clear();
-        for (Movie item : movieList) {
-            mAdapter.add(item);
-        }
+        return null;
     }
 }

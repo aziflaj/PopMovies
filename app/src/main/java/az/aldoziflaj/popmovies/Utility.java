@@ -2,9 +2,9 @@ package az.aldoziflaj.popmovies;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,45 +39,13 @@ public class Utility {
     }
 
     /**
-     * The method fetches the list of poster URLs from the JSON response from the cloud
-     *
-     * @param moviesJsonString The string-encoded JSON response
-     * @return A String array of poster URLs
-     */
-    public static String[] fetchPosterListFromJson(String moviesJsonString) {
-        ArrayList<String> posterList = new ArrayList<>();
-        try {
-            JSONArray jsonMovieList = (new JSONObject(moviesJsonString)).getJSONArray("results");
-            int movieListLength = jsonMovieList.length();
-            Log.d(LOG, movieListLength + " items fetched");
-
-            for (int i = 0; i < movieListLength; i++) {
-                JSONObject currentMovie = jsonMovieList.getJSONObject(i);
-                posterList.add(currentMovie.getString(Constants.Api.POSTER_PATH_KEY));
-            }
-
-        } catch (JSONException e) {
-            Log.e(LOG, "Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        String[] result = new String[posterList.size()];
-        posterList.toArray(result);
-
-        return result;
-    }
-
-    /**
-     * This method fetches an {@code ArrayList<HashMap<String, String>>} with key-value
-     * pairs of data from the JSON response of the cloud service of TMDB and stores them into the
-     * database
+     * This method fetches data from the JSON response of the cloud service of TMDB and stores them
+     * into the database
      *
      * @param context    The Application Context
      * @param jsonString The string-encoded JSON response
-     * @return The {@code ArrayList<HashMap<String, String>>} with key-value pairs
      */
-    public static ArrayList<Movie> fetchMovieListFromJSON(Context context, String jsonString) {
-        ArrayList<Movie> movieList = new ArrayList<>();
+    public static void storeJsonResponseMovies(Context context, String jsonString) {
         ArrayList<ContentValues> cvList = new ArrayList<>();
 
         try {
@@ -88,8 +56,6 @@ public class Utility {
             for (int i = 0; i < movieListLength; i++) {
                 JSONObject currentJsonMovie = jsonMovieList.getJSONObject(i);
                 ContentValues cValues = new ContentValues();
-                Gson gson = new Gson();
-                Movie singleMovie = gson.fromJson(currentJsonMovie.toString(), Movie.class);
 
                 //get the movie data from the JSON response
                 //get the title
@@ -116,7 +82,6 @@ public class Utility {
                 String description = currentJsonMovie.getString(Constants.Api.OVERVIEW_KEY);
                 cValues.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, description);
 
-                movieList.add(singleMovie);
                 cvList.add(cValues);
             }
 
@@ -135,7 +100,20 @@ public class Utility {
             Log.e(LOG, "Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
 
-        return movieList;
+    /**
+     * Get the default sort order as shared preference.
+     *
+     * @param context The application context
+     * @return The default sort order
+     */
+    public static String getDefaultSortOrder(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String sortOrder = prefs.getString(
+                context.getString(R.string.movie_sort_key),
+                context.getString(R.string.movie_sort_default));
+
+        return sortOrder;
     }
 }
