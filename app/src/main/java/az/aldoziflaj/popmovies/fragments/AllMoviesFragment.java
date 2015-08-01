@@ -1,6 +1,8 @@
 package az.aldoziflaj.popmovies.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -19,6 +21,7 @@ import android.widget.GridView;
 import az.aldoziflaj.popmovies.FetchMoviesTask;
 import az.aldoziflaj.popmovies.R;
 import az.aldoziflaj.popmovies.Utility;
+import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
 import az.aldoziflaj.popmovies.adapters.MovieAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
@@ -53,26 +56,18 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
         moviesGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Movie itemClicked = movieAdapter.getItem(position);
-//                String movieTitle = itemClicked.getTitle();
-//                String moviePoster = itemClicked.getPosterPath();
-//                String movieReleaseDate = itemClicked.getReleaseDate();
-//                double movieRating = itemClicked.getRating();
-//                int movieTotalVotes = itemClicked.getVoteCount();
-//                String movieOverview = itemClicked.getDescription();
-//
-//                Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
-//                detailsIntent.putExtra(Constants.Movie.MOVIE_TITLE, movieTitle);
-//                detailsIntent.putExtra(Constants.Movie.MOVIE_POSTER, moviePoster);
-//                detailsIntent.putExtra(Constants.Movie.MOVIE_RELEASE_DATE, movieReleaseDate);
-//                detailsIntent.putExtra(Constants.Movie.MOVIE_RATING, movieRating);
-//                detailsIntent.putExtra(Constants.Movie.MOVIE_TOTAL_VOTES, movieTotalVotes);
-//                detailsIntent.putExtra(Constants.Movie.MOVIE_OVERVIEW, movieOverview);
-//                startActivity(detailsIntent);
+                Cursor currentData = (Cursor) parent.getItemAtPosition(position);
+                if (currentData != null) {
+                    Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
+                    final int MOVIE_ID_COL = currentData.getColumnIndex(MovieContract.MovieTable._ID);
+                    Uri movieUri = MovieContract.MovieTable.buildMovieWithId(currentData.getInt(MOVIE_ID_COL));
+
+                    detailsIntent.setData(movieUri);
+                    startActivity(detailsIntent);
+                }
             }
         });
 
-        //cursor.close();
         return rootView;
     }
 
@@ -113,7 +108,7 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
         String sortOrder;
 
         if (sortOrderSetting.equals(getString(R.string.movie_sort_default))) {
-            //sort by popularity
+            //sort by popularity ? (TODO: check if correct)
             sortOrder = MovieContract.MovieTable.COLUMN_VOTE_COUNT + " DESC";
         } else {
             //sort by rating
@@ -122,7 +117,7 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
 
         return new CursorLoader(getActivity(),
                 MovieContract.MovieTable.CONTENT_URI,
-                null,
+                new String[]{MovieContract.MovieTable._ID, MovieContract.MovieTable.COLUMN_IMAGE_URL},
                 null,
                 null,
                 sortOrder);
