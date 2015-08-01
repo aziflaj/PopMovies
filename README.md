@@ -11,7 +11,7 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
   - ~~Use preferences (from the Settings Activity) to sort the movies (possible bug)~~ ([5cd1326](https://github.com/aziflaj/PopMovies/commit/5cd1326dcfb081cc60e09f92b7dd2c85d84337b8))
   - ~~Create the database with the needed table(s)~~ ([220e7ec](https://github.com/aziflaj/PopMovies/commit/220e7ec9fab80a8bfeaf5e1e5ff44491568d46b4))
   - ~~Write a content provider and store movies into the DB~~ ([4bcc072](https://github.com/aziflaj/PopMovies/commit/4bcc07269cc85e080f637910085f80a896aa2e14))
-  - Use a `CursorAdapter` to show the data from the database
+  - ~~Use a `CursorAdapter` to show the data from the database~~ ([dfc6be0](https://github.com/aziflaj/PopMovies/commit/dfc6be04f35404631ed3d619d56fdf2c3986ec6c))
   - Make the app responsive (Tablet support)
     - Show the selected item
   - Add the magic: Make the app syncable on the background
