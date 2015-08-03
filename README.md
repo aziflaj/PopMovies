@@ -21,7 +21,8 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
 ## Consider using
   - ~~[Fresco](http://frescolib.org/) for image loading~~
   - [Gson](https://github.com/google/gson) for JSON processing :white_check_mark:
-  - ORM instead of SQLite:
+  - Automate Content Provider generation with [ProviGen](https://github.com/TimotheeJeannin/ProviGen)
+  - ORM instead of SQLite/ContentProvider:
     - [Realm](https://realm.io/docs/java)
     - [GreenDAO](http://greendao-orm.com/)
     - [Sugar ORM](http://satyan.github.io/sugar/index.html)
