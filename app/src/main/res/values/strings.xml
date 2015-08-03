@@ -5,18 +5,7 @@
     <string name="title_activity_details">Details</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!-- JSON keys for the Cloud response -->
-    <string name="json.key.id">id</string>
-    <string name="json.key.title">original_title</string>
-    <string name="json.key.release_date">release_date</string>
-    <string name="json.key.poster">poster_path</string>
-    <string name="json.key.vote_average">vote_average</string>
-    <string name="json.key.total_votes">vote_count</string>
-    <string name="json.key.description">overview</string>
-
     <!-- API keys and possible values -->
-    <string name="api.param.sort">sortby</string>
-    <string name="api.param.api_key">api_key</string>
     <string name="api.sort.popularity">popularity.desc</string>
     <string name="api.sort.votes">vote_average.desc</string>
 
