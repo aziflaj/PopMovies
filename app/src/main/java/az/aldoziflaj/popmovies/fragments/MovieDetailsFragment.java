@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import az.aldoziflaj.popmovies.Constants;
+import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
@@ -73,8 +73,8 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
         int totalVotes = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_VOTE_COUNT));
         String overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_DESCRIPTION));
 
-        Uri posterUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
-                .appendPath(Constants.Api.IMAGE_DEFAULT_SIZE)
+        Uri posterUri = Uri.parse(Config.IMAGE_BASE_URL).buildUpon()
+                .appendPath(getActivity().getString(R.string.api_image_size_medium))
                 .appendPath(poster.substring(1)) //remove the heading slash
                 .build();
 

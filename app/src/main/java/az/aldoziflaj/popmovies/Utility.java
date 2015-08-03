@@ -59,27 +59,28 @@ public class Utility {
 
                 //get the movie data from the JSON response
                 //get the title
-                String title = currentJsonMovie.getString(Constants.Api.ORIGINAL_TITLE_KEY);
+                String title = currentJsonMovie.getString(context.getString(R.string.json_key_title));
                 cValues.put(MovieContract.MovieTable.COLUMN_TITLE, title);
 
                 //get the poster url
-                String posterPath = currentJsonMovie.getString(Constants.Api.POSTER_PATH_KEY);
+                String posterPath = currentJsonMovie.getString(context.getString(R.string.json_key_poster));
                 cValues.put(MovieContract.MovieTable.COLUMN_IMAGE_URL, posterPath);
 
                 //get the rating
-                double voteAverage = currentJsonMovie.getDouble(Constants.Api.VOTE_AVERAGE_KEY);
+                double voteAverage = currentJsonMovie.getDouble(context.getString(R.string.json_key_vote_average));
                 cValues.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, voteAverage);
 
                 //get the total number of votes
-                int totalVotes = currentJsonMovie.getInt(Constants.Api.TOTAL_VOTES_KEY);
+                int totalVotes = currentJsonMovie.getInt(context.getString(R.string.json_key_total_votes));
                 cValues.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, totalVotes);
 
                 //get the movie release date
-                String releaseDate = Utility.releaseDateFormatter(currentJsonMovie.getString(Constants.Api.RELEASE_DATE_KEY));
+                String releaseDate = Utility.releaseDateFormatter(
+                        currentJsonMovie.getString(context.getString(R.string.json_key_release_date)));
                 cValues.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE, releaseDate);
 
                 //get the description of the movie
-                String description = currentJsonMovie.getString(Constants.Api.OVERVIEW_KEY);
+                String description = currentJsonMovie.getString(context.getString(R.string.json_key_description));
                 cValues.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, description);
 
                 cvList.add(cValues);

@@ -30,19 +30,22 @@ public class FetchMoviesTask extends AsyncTask<String, Void, Void> {
 
         String sortOrder;
         if (params[0].equals(mContext.getString(R.string.movie_sort_default))) {
-            sortOrder = Constants.Api.SORT_BY_POPULARITY;
+            sortOrder = mContext.getString(R.string.api_sort_popularity);
         } else {
-            sortOrder = Constants.Api.SORT_BY_VOTES;
+            sortOrder = mContext.getString(R.string.api_sort_votes);
         }
 
         HttpURLConnection urlConnection = null;
         String moviesJsonString;
         BufferedReader reader = null;
 
+        final String SORT_KEY = mContext.getString(R.string.api_param_sort);
+        final String API_KEY_QUERY = mContext.getString(R.string.api_param_api_key);
+
         try {
-            Uri moviesUri = Uri.parse(Constants.Api.API_BASE_URL).buildUpon()
-                    .appendQueryParameter(Constants.Api.SORT_KEY, sortOrder)
-                    .appendQueryParameter(Constants.Api.API_KEY_QUERY, Constants.Api.API_KEY)
+            Uri moviesUri = Uri.parse(Config.API_BASE_URL).buildUpon()
+                    .appendQueryParameter(SORT_KEY, sortOrder)
+                    .appendQueryParameter(API_KEY_QUERY, Config.API_KEY)
                     .build();
 
             Log.d(LOG_TAG, moviesUri.toString());

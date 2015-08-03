@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-import az.aldoziflaj.popmovies.Constants;
+import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
@@ -36,8 +36,8 @@ public class MovieAdapter extends CursorAdapter {
         int moviePosterColumn = cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_IMAGE_URL);
         String moviePoster = cursor.getString(moviePosterColumn);
 
-        Uri imageUri = Uri.parse(Constants.Api.IMAGE_BASE_URL).buildUpon()
-                .appendPath(Constants.Api.IMAGE_SIZE_MEDIUM)
+        Uri imageUri = Uri.parse(Config.IMAGE_BASE_URL).buildUpon()
+                .appendPath(context.getString(R.string.api_image_size_medium))
                 .appendPath(moviePoster.substring(1))
                 .build();
 
