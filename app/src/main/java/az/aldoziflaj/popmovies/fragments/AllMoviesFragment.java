@@ -18,12 +18,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import az.aldoziflaj.popmovies.FetchMoviesTask;
+import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
+import az.aldoziflaj.popmovies.TmdbService;
 import az.aldoziflaj.popmovies.Utility;
 import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
 import az.aldoziflaj.popmovies.adapters.MovieAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = AllMoviesFragment.class.getSimpleName();
@@ -95,11 +100,25 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
 
     private void updateMovies() {
         String sortOrder = Utility.getDefaultSortOrder(getActivity());
+        Log.d(LOG_TAG, "Sort by: " + sortOrder);
 
-        Log.d(LOG_TAG, sortOrder);
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(Config.API_BASE_URL)
+                .build();
+        TmdbService tmdbService = restAdapter.create(TmdbService.class);
+        tmdbService.getTopMovies(sortOrder, new Callback<Config.ApiResponse>() {
+            @Override
+            public void success(Config.ApiResponse apiResponse, Response response) {
+                Log.d(LOG_TAG, "RETROFIT: SUCCESS");
+                Utility.storeMovieList(getActivity(), apiResponse.getMovieList());
+            }
 
-        FetchMoviesTask task = new FetchMoviesTask(getActivity());
-        task.execute(sortOrder);
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(LOG_TAG, "Error: " + error);
+            }
+        });
+
     }
 
     @Override

@@ -22,11 +22,10 @@ import az.aldoziflaj.popmovies.data.MovieContract;
 
 
 public class MovieDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    private static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
     public static final int DETAILS_LOADER = 0;
 
-    public MovieDetailsFragment() { }
+    public MovieDetailsFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +59,11 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
             return;
         }
 
+        if (getView() == null) {
+            //wtf?
+            return;
+        }
+
         TextView detailsTitle = (TextView) getView().findViewById(R.id.details_movie_title);
         ImageView detailsPoster = (ImageView) getView().findViewById(R.id.details_movie_poster);
         TextView detailsRating = (TextView) getView().findViewById(R.id.movie_rating);
@@ -74,7 +78,7 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
         String overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_DESCRIPTION));
 
         Uri posterUri = Uri.parse(Config.IMAGE_BASE_URL).buildUpon()
-                .appendPath(getActivity().getString(R.string.api_image_size_medium))
+                .appendPath(getActivity().getString(R.string.api_image_size_default))
                 .appendPath(poster.substring(1)) //remove the heading slash
                 .build();
 
