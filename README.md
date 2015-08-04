@@ -27,4 +27,4 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
     - [GreenDAO](http://greendao-orm.com/)
     - [Sugar ORM](http://satyan.github.io/sugar/index.html)
   - [OkHttp](http://square.github.io/okhttp/) as HTTP+SPDY Client
-  - [Retrofit](http://square.github.io/retrofit/) as REST client
+  - [Retrofit](http://square.github.io/retrofit/) as REST client :white_check_mark:
