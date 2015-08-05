@@ -18,17 +18,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
-import az.aldoziflaj.popmovies.TmdbService;
 import az.aldoziflaj.popmovies.Utility;
 import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
 import az.aldoziflaj.popmovies.adapters.MovieAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import az.aldoziflaj.popmovies.sync.MovieSyncAdapter;
 
 public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = AllMoviesFragment.class.getSimpleName();
@@ -99,35 +94,38 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     private void updateMovies() {
-        String sortOrder = Utility.getDefaultSortOrder(getActivity());
-        Log.d(LOG_TAG, "Sort by: " + sortOrder);
+        MovieSyncAdapter.syncImmediately(getActivity());
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(Config.API_BASE_URL)
-                .build();
-        TmdbService tmdbService = restAdapter.create(TmdbService.class);
-        tmdbService.getTopMovies(sortOrder, new Callback<Config.ApiResponse>() {
-            @Override
-            public void success(Config.ApiResponse apiResponse, Response response) {
-                Log.d(LOG_TAG, "RETROFIT: SUCCESS");
-                Utility.storeMovieList(getActivity(), apiResponse.getMovieList());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e(LOG_TAG, "Error: " + error);
-            }
-        });
+//        String sortOrder = Utility.getPreferredSortOrder(getActivity());
+//        Log.d(LOG_TAG, "Sort by: " + sortOrder);
+//
+//        RestAdapter restAdapter = new RestAdapter.Builder()
+//                .setEndpoint(Config.API_BASE_URL)
+//                .build();
+//        TmdbService tmdbService = restAdapter.create(TmdbService.class);
+//        tmdbService.getTopMovies(sortOrder, new Callback<Config.ApiResponse>() {
+//            @Override
+//            public void success(Config.ApiResponse apiResponse, Response response) {
+//                Log.d(LOG_TAG, "RETROFIT: SUCCESS");
+//                Utility.storeMovieList(getActivity(), apiResponse.getMovieList());
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.e(LOG_TAG, "Error: " + error);
+//            }
+//        });
 
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sortOrderSetting = Utility.getDefaultSortOrder(getActivity());
+        String sortOrderSetting = Utility.getPreferredSortOrder(getActivity());
         String sortOrder;
+        final int NUMBER_OF_MOVIES = 20;
 
         if (sortOrderSetting.equals(getString(R.string.movie_sort_default))) {
-            //sort by popularity ? (TODO: check if correct)
+            //sort by popularity ? TODO: check if correct
             sortOrder = MovieContract.MovieTable.COLUMN_VOTE_COUNT + " DESC";
         } else {
             //sort by rating
@@ -139,11 +137,13 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
                 new String[]{MovieContract.MovieTable._ID, MovieContract.MovieTable.COLUMN_IMAGE_URL},
                 null,
                 null,
+//                sortOrder + " LIMIT " + NUMBER_OF_MOVIES); //TODO: gets the first or the last 20?
                 sortOrder);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        Log.d(LOG_TAG, "Cursor loaded, " + cursor.getCount() + " rows fetched");
         movieAdapter.swapCursor(cursor);
     }
 

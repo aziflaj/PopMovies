@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- This sets the color of the action bar
-        <item name="colorPrimary">#E93E30</item> -->
-        <item name="colorPrimary">#DD2618</item>
+        <item name="colorPrimary">#3AC280</item> -->
+        <item name="colorPrimary">#28B973</item>
 
     </style>
 

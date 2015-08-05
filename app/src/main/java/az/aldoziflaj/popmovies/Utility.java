@@ -41,7 +41,7 @@ public class Utility {
      * @param context The application context
      * @return The default sort order
      */
-    public static String getDefaultSortOrder(Context context) {
+    public static String getPreferredSortOrder(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String sortOrder = prefs.getString(
                 context.getString(R.string.movie_sort_key),
