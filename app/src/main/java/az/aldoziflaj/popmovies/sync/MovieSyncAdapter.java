@@ -21,8 +21,53 @@ import retrofit.client.Response;
 
 public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
+    // time in seconds when to sync
+    public static final int SYNC_INTERVAL = 60 * 60 * 10; // 10 hours
+
     public MovieSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
+    }
+
+    public static void syncImmediately(Context context) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        ContentResolver.requestSync(
+                getAccount(context),
+                context.getString(R.string.content_authority),
+                bundle);
+    }
+
+    private static Account getAccount(Context context) {
+        AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+
+        Account newAccount = new Account(
+                context.getString(R.string.app_name),
+                context.getString(R.string.sync_account_type));
+
+        if (accountManager.getPassword(newAccount) == null) {
+            if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
+                return null;
+            }
+
+            // schedule the sync adapter
+            ContentResolver.addPeriodicSync(newAccount,
+                    context.getString(R.string.content_authority),
+                    Bundle.EMPTY,
+                    SYNC_INTERVAL);
+
+            ContentResolver.setSyncAutomatically(newAccount,
+                    context.getString(R.string.content_authority),
+                    true);
+
+            syncImmediately(context);
+        }
+
+        return newAccount;
+    }
+
+    public static void initSyncAdapter(Context context) {
+        getAccount(context);
     }
 
     @Override
@@ -46,32 +91,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
             }
         });
 
-    }
-
-    public static void syncImmediately(Context context) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        ContentResolver.requestSync(
-                getAccount(context),
-                context.getString(R.string.content_authority),
-                bundle);
-    }
-
-    private static Account getAccount(Context context) {
-        AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
-
-        Account newAccount = new Account(
-                context.getString(R.string.app_name),
-                context.getString(R.string.sync_account_type));
-
-        if (accountManager == null) {
-            if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
-                return null;
-            }
-        }
-
-        return newAccount;
     }
 
 }

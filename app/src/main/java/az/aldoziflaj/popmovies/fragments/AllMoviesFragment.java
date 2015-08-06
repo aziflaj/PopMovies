@@ -95,27 +95,6 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
 
     private void updateMovies() {
         MovieSyncAdapter.syncImmediately(getActivity());
-
-//        String sortOrder = Utility.getPreferredSortOrder(getActivity());
-//        Log.d(LOG_TAG, "Sort by: " + sortOrder);
-//
-//        RestAdapter restAdapter = new RestAdapter.Builder()
-//                .setEndpoint(Config.API_BASE_URL)
-//                .build();
-//        TmdbService tmdbService = restAdapter.create(TmdbService.class);
-//        tmdbService.getTopMovies(sortOrder, new Callback<Config.ApiResponse>() {
-//            @Override
-//            public void success(Config.ApiResponse apiResponse, Response response) {
-//                Log.d(LOG_TAG, "RETROFIT: SUCCESS");
-//                Utility.storeMovieList(getActivity(), apiResponse.getMovieList());
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.e(LOG_TAG, "Error: " + error);
-//            }
-//        });
-
     }
 
     @Override
@@ -137,8 +116,7 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
                 new String[]{MovieContract.MovieTable._ID, MovieContract.MovieTable.COLUMN_IMAGE_URL},
                 null,
                 null,
-//                sortOrder + " LIMIT " + NUMBER_OF_MOVIES); //TODO: gets the first or the last 20?
-                sortOrder);
+                sortOrder + " LIMIT " + NUMBER_OF_MOVIES);
     }
 
     @Override
