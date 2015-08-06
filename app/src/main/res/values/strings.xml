@@ -13,9 +13,9 @@
     <string name="api.image.size.medium" translatable="false">w342</string>
 
     <!-- Settings key-value pairs -->
-    <string name="movie_sort_key" translatable="false">sorting_type</string>
-    <string name="movie_sort_title">Sort movies by</string>
-    <string name="movie_sort_default">popularity</string>
+    <string name="prefs.sort.key" translatable="false">sorting_type</string>
+    <string name="prefs.sort.title">Sort movies by</string>
+    <string name="prefs.sort.default_value">popularity</string>
     <string-array name="movie_sorting_keys" translatable="false">
         <item>popularity</item>
         <item>high_rated</item>
@@ -24,6 +24,12 @@
         <item>Most popular</item>
         <item>Highest rated</item>
     </string-array>
+
+    <string name="prefs.notification.key" translatable="false">notification</string>
+    <string name="prefs.notification.title">Notifications</string>
+    <string name="prefs.notification.summary.off">Don\'t show notifications</string>
+    <string name="prefs.notification.summary.on">Show notifications</string>
+    <string name="prefs.notification.last.key">last_notification</string>
 
     <!-- String formats for detailed view -->
     <string name="format.ratings"><xliff:g id="rating">%.1f</xliff:g>/10 (<xliff:g id="votes">%d</xliff:g> votes)</string>
@@ -34,4 +40,6 @@
 
     <!-- Strings for the content provider -->
     <string name="content.authority">az.aldoziflaj.popmovies</string>
+
+    <string name="notification.content">Did you check the new movies today?</string>
 </resources>

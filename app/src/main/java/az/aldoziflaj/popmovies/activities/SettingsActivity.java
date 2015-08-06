@@ -21,7 +21,7 @@ public class SettingsActivity extends PreferenceActivity
         super.onPostCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_general);
 
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.movie_sort_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.prefs_sort_key)));
     }
 
 

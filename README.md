@@ -14,8 +14,8 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
   - ~~Use a `CursorAdapter` to show the data from the database~~ ([dfc6be0](http://git.io/vOl5g))
   - Make the app responsive (Tablet support)
     - Show the selected item
-  - Add the magic: Make the app syncable on the background
-  - Show notifications (for what?)
+  - ~~Add the magic: Make the app syncable on the background~~ ([3ba36fa](http://git.io/vOSPj))
+  - ~~Show notifications~~
 
 
 ## Consider using

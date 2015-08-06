@@ -43,11 +43,10 @@ public class Utility {
      */
     public static String getPreferredSortOrder(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String sortOrder = prefs.getString(
-                context.getString(R.string.movie_sort_key),
-                context.getString(R.string.movie_sort_default));
 
-        return sortOrder;
+        return prefs.getString(
+                context.getString(R.string.prefs_sort_key),
+                context.getString(R.string.prefs_sort_default_value));
     }
 
     /**
