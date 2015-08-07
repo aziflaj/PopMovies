@@ -25,7 +25,7 @@
         </activity>
         <activity
             android:name=".activities.MovieDetailsActivity"
-            android:label="@string/title_activity_details"
+            android:label="@string/activity.details.title"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -33,7 +33,7 @@
         </activity>
         <activity
             android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:label="@string/activity.settings.title"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
