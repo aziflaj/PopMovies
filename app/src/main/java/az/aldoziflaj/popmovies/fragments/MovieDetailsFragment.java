@@ -64,6 +64,7 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
             return;
         }
 
+        //TODO: Populate with the new data
         //TextView detailsTitle = (TextView) getView().findViewById(R.id.details_movie_title);
         ImageView detailsPoster = (ImageView) getView().findViewById(R.id.details_movie_poster);
         TextView detailsRating = (TextView) getView().findViewById(R.id.movie_rating);
@@ -88,6 +89,7 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
 
         detailsOverview.setText(overview);
 //        detailsTitle.setText(title);
+        getActivity().setTitle(title);
 
         detailsRating.setText(
                 String.format(getActivity().getString(R.string.format_ratings), rating, totalVotes));

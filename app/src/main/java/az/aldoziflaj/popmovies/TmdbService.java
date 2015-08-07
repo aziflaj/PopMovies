@@ -6,6 +6,7 @@ import retrofit.http.Query;
 
 /**
  * This interface serves as a client for The Movie DB. Retrofit does the job
+ * TODO: create prototypes for other REST routes (check if needed)
  */
 public interface TmdbService {
 

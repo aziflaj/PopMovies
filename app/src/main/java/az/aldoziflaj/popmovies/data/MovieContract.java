@@ -5,6 +5,9 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+/**
+ * TODO: prepare to store other data: trailers, favorite movies, etc.
+ */
 public class MovieContract {
 
     // Content Authority => The name of the Content Provider
