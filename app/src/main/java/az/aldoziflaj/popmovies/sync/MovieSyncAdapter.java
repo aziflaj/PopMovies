@@ -21,9 +21,10 @@ import android.util.Log;
 
 import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
-import az.aldoziflaj.popmovies.TmdbService;
+import az.aldoziflaj.popmovies.api.TmdbService;
 import az.aldoziflaj.popmovies.Utility;
 import az.aldoziflaj.popmovies.activities.MainActivity;
+import az.aldoziflaj.popmovies.api.AllMoviesResponse;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -90,10 +91,10 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 .setEndpoint(Config.API_BASE_URL)
                 .build();
         TmdbService tmdbService = restAdapter.create(TmdbService.class);
-        tmdbService.getTopMovies(sortOrder, new Callback<Config.ApiResponse>() {
+        tmdbService.getTopMovies(sortOrder, new Callback<AllMoviesResponse>() {
             @Override
-            public void success(Config.ApiResponse apiResponse, Response response) {
-                Utility.storeMovieList(getContext(), apiResponse.getMovieList());
+            public void success(AllMoviesResponse allMovies, Response response) {
+                Utility.storeMovieList(getContext(), allMovies.getMovieList());
                 sendNotification();
             }
 
