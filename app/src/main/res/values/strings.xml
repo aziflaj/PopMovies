@@ -44,4 +44,6 @@
     <string name="content.authority">az.aldoziflaj.popmovies</string>
 
     <string name="notification.content">Did you check the new movies today?</string>
+    
+    <string name="menu.favorites">Favorites</string>
 </resources>
