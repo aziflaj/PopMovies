@@ -1,16 +1,21 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name" translatable="false">PopMovies</string>
-    <!--<string name="greetings">Popular Movies</string>-->
-    <string name="action_settings">Settings</string>
+
+    <!-- Menu entries -->
+    <string name="menu.settings">Settings</string>
+    <string name="menu.favorites">Favorites</string>
+
+    <!-- Activity default titles -->
     <string name="activity.details.title">Details</string>
     <string name="activity.settings.title">Settings</string>
+    <string name="activity.favorites.title">Favorited Movies</string>
 
-    <string name="details.button.favorite">Mark as favorite</string>
+    <string name="details.button.favorite.add">Mark as favorite</string>
+    <string name="details.button.favorite.remove">Unmark as favorite</string>
 
     <!-- API keys and possible values -->
     <string name="api.sort.popularity" translatable="false">popularity.desc</string>
     <string name="api.sort.votes" translatable="false">vote_average.desc</string>
-
     <string name="api.image.size.default" translatable="false">w185</string>
     <string name="api.image.size.medium" translatable="false">w342</string>
 
@@ -45,5 +50,4 @@
 
     <string name="notification.content">Did you check the new movies today?</string>
     
-    <string name="menu.favorites">Favorites</string>
 </resources>

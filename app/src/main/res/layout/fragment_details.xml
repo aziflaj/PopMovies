@@ -65,10 +65,9 @@
             android:layout_below="@id/movie_rating"
             android:layout_toEndOf="@id/details_movie_poster"
             android:layout_toRightOf="@id/details_movie_poster"
-
             android:background="@color/green_dark"
             android:padding="8dp"
-            android:text="@string/details.button.favorite"
+            android:text="@string/details.button.favorite.add"
             android:textAllCaps="true"
             android:textColor="@color/white" />
 
