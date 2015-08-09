@@ -64,10 +64,11 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
             return;
         }
 
-        TextView detailsTitle = (TextView) getView().findViewById(R.id.details_movie_title);
+        //TODO: Populate with the new data
+        //TextView detailsTitle = (TextView) getView().findViewById(R.id.details_movie_title);
         ImageView detailsPoster = (ImageView) getView().findViewById(R.id.details_movie_poster);
         TextView detailsRating = (TextView) getView().findViewById(R.id.movie_rating);
-        TextView detailsReleaseDate = (TextView) getView().findViewById(R.id.movie_release_date);
+//        TextView detailsReleaseDate = (TextView) getView().findViewById(R.id.movie_release_date);
         TextView detailsOverview = (TextView) getView().findViewById(R.id.movie_description);
 
         String title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_TITLE));
@@ -87,13 +88,14 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 .into(detailsPoster);
 
         detailsOverview.setText(overview);
-        detailsTitle.setText(title);
+//        detailsTitle.setText(title);
+        getActivity().setTitle(title);
 
         detailsRating.setText(
                 String.format(getActivity().getString(R.string.format_ratings), rating, totalVotes));
 
-        detailsReleaseDate.setText(
-                String.format(getActivity().getString(R.string.format_release_date), releaseDate));
+//        detailsReleaseDate.setText(
+//                String.format(getActivity().getString(R.string.format_release_date), releaseDate));
     }
 
     @Override

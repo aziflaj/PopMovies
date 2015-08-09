@@ -1,9 +1,10 @@
-package az.aldoziflaj.popmovies;
+package az.aldoziflaj.popmovies.api;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * This class will be used to get a Java Object from the JSON response by using GSON
+ * TODO: Get Movie popularity (for sorting)
  */
 public class Movie {
 
@@ -11,7 +12,7 @@ public class Movie {
     private String mTitle;
 
     @SerializedName("id")
-    private int mID;
+    private int mMovieId;
 
     @SerializedName("release_date")
     private String mReleaseDate;
@@ -32,8 +33,8 @@ public class Movie {
         return mTitle;
     }
 
-    public int getID() {
-        return mID;
+    public int getMovieId() {
+        return mMovieId;
     }
 
     public String getReleaseDate() {

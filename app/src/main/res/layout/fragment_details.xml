@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     tools:context="az.aldoziflaj.popmovies.fragments.MovieDetailsFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
         android:paddingTop="8dp">
@@ -16,47 +16,67 @@
         <ImageView
             android:id="@+id/details_movie_poster"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/loading" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+        <TextView
+            android:id="@+id/movie_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:text="2015"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_larger" />
 
-            <TextView
-                android:id="@+id/details_movie_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:gravity="center"
-                android:paddingBottom="16dp"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+        <TextView
+            android:id="@+id/movie_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_year"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:paddingBottom="8dp"
+            android:text="120min"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/font_large"
+            android:textStyle="bold|italic" />
 
-            <TextView
-                android:id="@+id/movie_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:paddingBottom="8dp"
-                android:textSize="16sp" />
+        <TextView
+            android:id="@+id/movie_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_length"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:paddingBottom="8dp"
+            android:text="8.1/10"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_small" />
 
-            <TextView
-                android:id="@+id/movie_release_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="16sp" />
+        <Button
+            android:id="@+id/favorite_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_rating"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:background="@color/green_dark"
+            android:padding="8dp"
+            android:text="@string/details.button.favorite.add"
+            android:textAllCaps="true"
+            android:textColor="@color/white" />
 
-        </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/movie_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium" />
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
 
 </LinearLayout>

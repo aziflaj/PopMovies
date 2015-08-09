@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import az.aldoziflaj.popmovies.data.MovieContract;
+import az.aldoziflaj.popmovies.api.Movie;
 
 /**
  * A list of utility methods used through the application

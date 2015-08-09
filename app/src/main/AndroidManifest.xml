@@ -25,7 +25,7 @@
         </activity>
         <activity
             android:name=".activities.MovieDetailsActivity"
-            android:label="@string/title_activity_details"
+            android:label="@string/activity.details.title"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -33,8 +33,9 @@
         </activity>
         <activity
             android:name=".activities.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.MainActivity">
+            android:label="@string/activity.settings.title"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/SettingsTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
@@ -50,22 +51,31 @@
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-
         <service
             android:name=".sync.MovieSyncService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <activity
+            android:name=".activities.FavoritesActivity"
+            android:label="@string/activity.favorites.title"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="az.aldoziflaj.popmovies.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

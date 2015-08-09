@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- basic colors -->
+    <color name="green">#3AC280</color>
+
+    <!-- grayscale -->
+    <color name="white">#FFF</color>
+    <color name="gray_light">#DBDBDB</color>
+    <color name="gray">#939393</color>
+    <color name="gray_dark">#5F5F5F</color>
+    <color name="black">#323232</color>
+
+    <color name="green_light">#6F6</color>
+    <color name="green_dark">#28B973</color>
+    <color name="green_darker">#1A9158</color>
+
+</resources>
