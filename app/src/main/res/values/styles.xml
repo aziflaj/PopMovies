@@ -1,10 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <!-- This sets the color of the action bar -->
         <item name="colorPrimary">@color/green_dark</item>
-
+        <item name="colorPrimaryDark">@color/green_darker</item>
+    </style>
+    
+    <style name="SettingsTheme" parent="AppTheme">
+        <!-- Add the action bar to the Settings screen -->
     </style>
 
 </resources>
