@@ -31,3 +31,4 @@ Popular Movies App: A task from Android Nanodegree @ Udacity
     - [Sugar ORM](http://satyan.github.io/sugar/index.html)
   - ~~[OkHttp](http://square.github.io/okhttp/) as HTTP+SPDY Client~~ :x:
   - [Retrofit](http://square.github.io/retrofit/) as REST client :white_check_mark: ([a5899f0](http://git.io/vOz7E))
+  - [Robolectric](https://github.com/robolectric/robolectric) and/or [Robotium](https://code.google.com/p/robotium/) for unit testing
