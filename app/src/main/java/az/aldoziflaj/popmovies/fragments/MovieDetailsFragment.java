@@ -71,12 +71,12 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
 //        TextView detailsReleaseDate = (TextView) getView().findViewById(R.id.movie_release_date);
         TextView detailsOverview = (TextView) getView().findViewById(R.id.movie_description);
 
-        String title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_TITLE));
-        String poster = cursor.getString(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_IMAGE_URL));
-        double rating = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE));
-        String releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_RELEASE_DATE));
-        int totalVotes = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_VOTE_COUNT));
-        String overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_DESCRIPTION));
+        String title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
+        String poster = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_IMAGE_URL));
+        double rating = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE));
+        String releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
+        int totalVotes = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_COUNT));
+        String overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_DESCRIPTION));
 
         Uri posterUri = Uri.parse(Config.IMAGE_BASE_URL).buildUpon()
                 .appendPath(getActivity().getString(R.string.api_image_size_default))

@@ -9,7 +9,7 @@ import android.test.AndroidTestCase;
 public class TestMovieContract extends AndroidTestCase {
     public static final String TEST_POSTER_URL = "/5JU9ytZJyR3zmClGmVm9q4Geqbd.jpg";
     public static final Uri MOVIE_WITH_POSTER_URI =
-            MovieContract.MovieTable.CONTENT_URI.buildUpon()
+            MovieContract.MovieEntry.CONTENT_URI.buildUpon()
                     .appendPath(TEST_POSTER_URL.substring(1)).build();
 
     @Override
@@ -23,12 +23,12 @@ public class TestMovieContract extends AndroidTestCase {
      * fetching the URL from a given URI.
      */
     public void testPosterUrl() {
-        Uri movieWithPoster = MovieContract.MovieTable.buildMovieWithPoster(TEST_POSTER_URL);
+        Uri movieWithPoster = MovieContract.MovieEntry.buildMovieWithPoster(TEST_POSTER_URL);
 
         assertEquals("Movie with poster not created correctly",
                 MOVIE_WITH_POSTER_URI, movieWithPoster);
 
-        String fetchedPoster = MovieContract.MovieTable.getPosterUrlFromUri(movieWithPoster);
+        String fetchedPoster = MovieContract.MovieEntry.getPosterUrlFromUri(movieWithPoster);
 
         assertEquals("Fetched poster doesn't match the real one",
                 TEST_POSTER_URL.substring(1), fetchedPoster);

@@ -63,7 +63,7 @@ public class MovieProvider extends ContentProvider {
         switch (match) {
             case MOVIE:
                 cursor = db.query(
-                        MovieContract.MovieTable.TABLE_NAME,
+                        MovieContract.MovieEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -73,12 +73,12 @@ public class MovieProvider extends ContentProvider {
                 break;
 
             case MOVIE_WITH_POSTER:
-                String posterUrl = MovieContract.MovieTable.getPosterUrlFromUri(uri);
+                String posterUrl = MovieContract.MovieEntry.getPosterUrlFromUri(uri);
                 Log.d(LOG_TAG, "poster url: " + posterUrl);
                 cursor = db.query(
-                        MovieContract.MovieTable.TABLE_NAME,
+                        MovieContract.MovieEntry.TABLE_NAME,
                         projection,
-                        MovieContract.MovieTable.COLUMN_IMAGE_URL + " = ?",
+                        MovieContract.MovieEntry.COLUMN_IMAGE_URL + " = ?",
                         new String[]{posterUrl},
                         null,
                         null,
@@ -86,11 +86,11 @@ public class MovieProvider extends ContentProvider {
                 break;
 
             case MOVIE_WITH_ID:
-                long _id = MovieContract.MovieTable.getIdFromUri(uri);
+                long _id = MovieContract.MovieEntry.getIdFromUri(uri);
                 cursor = db.query(
-                        MovieContract.MovieTable.TABLE_NAME,
+                        MovieContract.MovieEntry.TABLE_NAME,
                         projection,
-                        MovieContract.MovieTable._ID + " = ?",
+                        MovieContract.MovieEntry._ID + " = ?",
                         new String[]{Long.toString(_id)},
                         null,
                         null,
@@ -109,8 +109,8 @@ public class MovieProvider extends ContentProvider {
      * Returns the type of the item pointed by a given URI
      *
      * @param uri A given content URI pointing to data in the sqlite database
-     * @return The type ({@code MovieContract.MovieTable.CONTENT_TYPE} or
-     * {@code MovieContract.MovieTable.CONTENT_ITEM_TYPE}) of the pointed data
+     * @return The type ({@code MovieContract.MovieEntry.CONTENT_TYPE} or
+     * {@code MovieContract.MovieEntry.CONTENT_ITEM_TYPE}) of the pointed data
      */
     @Override
     public String getType(Uri uri) {
@@ -118,10 +118,10 @@ public class MovieProvider extends ContentProvider {
 
         switch (match) {
             case MOVIE:
-                return MovieContract.MovieTable.CONTENT_TYPE;
+                return MovieContract.MovieEntry.CONTENT_TYPE;
 
             case MOVIE_WITH_POSTER:
-                return MovieContract.MovieTable.CONTENT_ITEM_TYPE;
+                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -143,9 +143,9 @@ public class MovieProvider extends ContentProvider {
 
         switch (match) {
             case MOVIE:
-                long insertedId = db.insert(MovieContract.MovieTable.TABLE_NAME, null, values);
+                long insertedId = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
                 if (insertedId > 0) {
-                    insertionUri = MovieContract.MovieTable.buildMovieWithId(insertedId);
+                    insertionUri = MovieContract.MovieEntry.buildMovieWithId(insertedId);
                 } else {
                     throw new SQLException("Failed to insert row into " + uri);
                 }
@@ -184,7 +184,7 @@ public class MovieProvider extends ContentProvider {
 
         switch (match) {
             case MOVIE:
-                rowsDeleted = db.delete(MovieContract.MovieTable.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME, selection, selectionArgs);
                 break;
 
             default:
@@ -220,7 +220,7 @@ public class MovieProvider extends ContentProvider {
         switch (match) {
             case MOVIE:
                 rowsUpdated = db.update(
-                        MovieContract.MovieTable.TABLE_NAME,
+                        MovieContract.MovieEntry.TABLE_NAME,
                         values, selection, selectionArgs);
                 break;
 
@@ -253,7 +253,7 @@ public class MovieProvider extends ContentProvider {
                 int count = 0;
 
                 for (ContentValues item : values) {
-                    long _id = db.insert(MovieContract.MovieTable.TABLE_NAME, null, item);
+                    long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, item);
                     if (_id != -1) {
                         count++;
                     }

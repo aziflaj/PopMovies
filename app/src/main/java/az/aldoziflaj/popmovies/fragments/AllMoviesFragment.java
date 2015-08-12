@@ -59,8 +59,8 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
                 Cursor currentData = (Cursor) parent.getItemAtPosition(position);
                 if (currentData != null) {
                     Intent detailsIntent = new Intent(getActivity(), MovieDetailsActivity.class);
-                    final int MOVIE_ID_COL = currentData.getColumnIndex(MovieContract.MovieTable._ID);
-                    Uri movieUri = MovieContract.MovieTable.buildMovieWithId(currentData.getInt(MOVIE_ID_COL));
+                    final int MOVIE_ID_COL = currentData.getColumnIndex(MovieContract.MovieEntry._ID);
+                    Uri movieUri = MovieContract.MovieEntry.buildMovieWithId(currentData.getInt(MOVIE_ID_COL));
 
                     detailsIntent.setData(movieUri);
                     startActivity(detailsIntent);
@@ -104,16 +104,16 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
         final int NUMBER_OF_MOVIES = 20;
 
         if (sortOrderSetting.equals(getString(R.string.prefs_sort_default_value))) {
-            //sort by popularity ? TODO: check if correct
-            sortOrder = MovieContract.MovieTable.COLUMN_VOTE_COUNT + " DESC";
+            //TODO:sort by popularity
+            sortOrder = MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC";
         } else {
             //sort by rating
-            sortOrder = MovieContract.MovieTable.COLUMN_VOTE_AVERAGE + " DESC";
+            sortOrder = MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE + " DESC";
         }
 
         return new CursorLoader(getActivity(),
-                MovieContract.MovieTable.CONTENT_URI,
-                new String[]{MovieContract.MovieTable._ID, MovieContract.MovieTable.COLUMN_IMAGE_URL},
+                MovieContract.MovieEntry.CONTENT_URI,
+                new String[]{MovieContract.MovieEntry._ID, MovieContract.MovieEntry.COLUMN_IMAGE_URL},
                 null,
                 null,
                 sortOrder + " LIMIT " + NUMBER_OF_MOVIES);

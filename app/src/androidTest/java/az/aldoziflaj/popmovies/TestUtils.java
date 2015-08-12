@@ -25,15 +25,15 @@ public class TestUtils extends AndroidTestCase {
     public static ContentValues createStubMovie() {
         ContentValues cv = new ContentValues();
 
-        cv.put(MovieContract.MovieTable.COLUMN_TITLE, MOVIE_TITLE);
+        cv.put(MovieContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE);
 
-        cv.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE,
+        cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
                 Utility.releaseDateFormatter("2014-10-26"));
 
-        cv.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, 8.8);
-        cv.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT);
-        cv.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, "lorem ipsum dolor");
-        cv.put(MovieContract.MovieTable.COLUMN_IMAGE_URL, "/img_of_interstellar.jpg");
+        cv.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, 8.8);
+        cv.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT);
+        cv.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, "lorem ipsum dolor");
+        cv.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, "/img_of_interstellar.jpg");
 
         return cv;
     }
@@ -72,13 +72,13 @@ public class TestUtils extends AndroidTestCase {
         for (int i = 0; i < 3; i++) {
             ContentValues cv = new ContentValues();
 
-            cv.put(MovieContract.MovieTable.COLUMN_TITLE, MOVIE_TITLE + i);
-            cv.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE,
+            cv.put(MovieContract.MovieEntry.COLUMN_TITLE, MOVIE_TITLE + i);
+            cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
                     Utility.releaseDateFormatter("2014-10-26"));
-            cv.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, 6.8 + i);
-            cv.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT + i * 10);
-            cv.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, "lorem ipsum dolor");
-            cv.put(MovieContract.MovieTable.COLUMN_IMAGE_URL, "/img_of_interstellar.jpg");
+            cv.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, 6.8 + i);
+            cv.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT + i * 10);
+            cv.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, "lorem ipsum dolor");
+            cv.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, "/img_of_interstellar.jpg");
 
             contentValues.add(cv);
         }

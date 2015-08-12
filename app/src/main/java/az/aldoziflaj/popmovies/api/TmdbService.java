@@ -1,6 +1,10 @@
 package az.aldoziflaj.popmovies.api;
 
 import az.aldoziflaj.popmovies.Config;
+import az.aldoziflaj.popmovies.api.models.AllMovies;
+import az.aldoziflaj.popmovies.api.models.AllComments;
+import az.aldoziflaj.popmovies.api.models.MovieRuntime;
+import az.aldoziflaj.popmovies.api.models.AllTrailers;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -18,14 +22,14 @@ public interface TmdbService {
      * @param callback  A {@code retrofit.Callback} to be called after the response is received
      */
     @GET("/discover/movie?api_key=" + Config.API_KEY)
-    void getTopMovies(@Query("sortby") String sortOrder, Callback<AllMoviesResponse> callback);
+    void getTopMovies(@Query("sortby") String sortOrder, Callback<AllMovies> callback);
 
     @GET("/movie/{id}?api_key=" + Config.API_KEY)
     void getMovieRuntime(@Path("id") int id, Callback<MovieRuntime> callback);
 
     @GET("/movie/{id}/videos?api_key=" + Config.API_KEY)
-    void getMovieTrailers(@Path("id") int id, Callback<TrailerList> callback);
+    void getMovieTrailers(@Path("id") int id, Callback<AllTrailers> callback);
 
     @GET("/movie/{id}/reviews?api_key=" + Config.API_KEY)
-    void getMovieReviews(@Path("id") int id, Callback<CommentList> callback);
+    void getMovieReviews(@Path("id") int id, Callback<AllComments> callback);
 }

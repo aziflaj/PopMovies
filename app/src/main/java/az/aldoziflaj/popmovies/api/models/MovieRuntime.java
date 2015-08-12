@@ -1,4 +1,4 @@
-package az.aldoziflaj.popmovies.api;
+package az.aldoziflaj.popmovies.api.models;
 
 import com.google.gson.annotations.SerializedName;
 

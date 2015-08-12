@@ -9,8 +9,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import az.aldoziflaj.popmovies.api.models.AllMovies;
 import az.aldoziflaj.popmovies.data.MovieContract;
-import az.aldoziflaj.popmovies.api.Movie;
 
 /**
  * A list of utility methods used through the application
@@ -51,44 +51,44 @@ public class Utility {
     }
 
     /**
-     * Store a list of {@code Movie} instances into the database
+     * Store a list of {@code MovieModel} instances into the database
      *
      * @param context   The Application Context
-     * @param movieList The {@code Movie} list fetched from the Cloud Service
+     * @param movieList The {@code MovieModel} list fetched from the Cloud Service
      */
-    public static void storeMovieList(Context context, List<Movie> movieList) {
+    public static void storeMovieList(Context context, List<AllMovies.MovieModel> movieList) {
         ArrayList<ContentValues> cvList = new ArrayList<>();
         int movieListLength = movieList.size();
         Log.d(LOG, movieListLength + " items fetched");
 
         for (int i = 0; i < movieListLength; i++) {
-            Movie movie = movieList.get(i);
+            AllMovies.MovieModel movie = movieList.get(i);
             ContentValues cValues = new ContentValues();
 
             //get the movie data from the JSON response
             //get the title
             String title = movie.getTitle();
-            cValues.put(MovieContract.MovieTable.COLUMN_TITLE, title);
+            cValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
 
             //get the poster url
             String posterPath = movie.getPosterPath();
-            cValues.put(MovieContract.MovieTable.COLUMN_IMAGE_URL, posterPath);
+            cValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, posterPath);
 
             //get the rating
             double voteAverage = movie.getRating();
-            cValues.put(MovieContract.MovieTable.COLUMN_VOTE_AVERAGE, voteAverage);
+            cValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
 
             //get the total number of votes
             int totalVotes = movie.getVoteCount();
-            cValues.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, totalVotes);
+            cValues.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, totalVotes);
 
             //get the movie release date
             String releaseDate = Utility.releaseDateFormatter(movie.getReleaseDate());
-            cValues.put(MovieContract.MovieTable.COLUMN_RELEASE_DATE, releaseDate);
+            cValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
 
             //get the description of the movie
             String description = movie.getDescription();
-            cValues.put(MovieContract.MovieTable.COLUMN_DESCRIPTION, description);
+            cValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, description);
 
             cvList.add(cValues);
         }
@@ -96,7 +96,7 @@ public class Utility {
         //insert into the DB
         ContentValues[] values = new ContentValues[cvList.size()];
         cvList.toArray(values);
-        int itemsAdded = context.getContentResolver().bulkInsert(MovieContract.MovieTable.CONTENT_URI, values);
+        int itemsAdded = context.getContentResolver().bulkInsert(MovieContract.MovieEntry.CONTENT_URI, values);
 
         if (itemsAdded != movieListLength) {
             Log.d(LOG, itemsAdded + "/" + movieListLength + " movies inserted");

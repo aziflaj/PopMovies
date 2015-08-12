@@ -6,23 +6,26 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.Suppress;
 
 import az.aldoziflaj.popmovies.TestUtils;
 
 /**
  * Test the MovieProvider
+ * TODO: remove Suppress
  */
+@Suppress
 public class TestProvider extends AndroidTestCase {
 
     private void deleteAllRecords() {
         SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
 
-        db.delete(MovieContract.MovieTable.TABLE_NAME, null, null);
+        db.delete(MovieContract.MovieEntry.TABLE_NAME, null, null);
 
-        Cursor cursor = db.query(MovieContract.MovieTable.TABLE_NAME,
+        Cursor cursor = db.query(MovieContract.MovieEntry.TABLE_NAME,
                 null, null, null, null, null, null);
 
-        assertEquals("Some records not deleted in " + MovieContract.MovieTable.TABLE_NAME, cursor.getCount(), 0);
+        assertEquals("Some records not deleted in " + MovieContract.MovieEntry.TABLE_NAME, cursor.getCount(), 0);
 
         cursor.close();
         db.close();
@@ -43,12 +46,12 @@ public class TestProvider extends AndroidTestCase {
 
         UriMatcher matcher = MovieProvider.createUriMatcher();
 
-        assertEquals("CONTENT_URI of MovieTable should be a Dir",
-                matcher.match(MovieContract.MovieTable.CONTENT_URI),
+        assertEquals("CONTENT_URI of MovieEntry should be a Dir",
+                matcher.match(MovieContract.MovieEntry.CONTENT_URI),
                 MovieProvider.MOVIE);
 
-        assertEquals("CONTENT_URI of MovieTable should be a Dir",
-                matcher.match(MovieContract.MovieTable.buildMovieWithPoster(testPoster)),
+        assertEquals("CONTENT_URI of MovieEntry should be a Dir",
+                matcher.match(MovieContract.MovieEntry.buildMovieWithPoster(testPoster)),
                 MovieProvider.MOVIE_WITH_POSTER);
     }
 
@@ -61,9 +64,9 @@ public class TestProvider extends AndroidTestCase {
 
         //insert into the table using the content provider
         ContentValues insertedValues = TestUtils.createStubMovie();
-        Uri insertedUri = mContext.getContentResolver().insert(MovieContract.MovieTable.CONTENT_URI, insertedValues);
+        Uri insertedUri = mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, insertedValues);
 
-        long insertedId = MovieContract.MovieTable.getIdFromUri(insertedUri);
+        long insertedId = MovieContract.MovieEntry.getIdFromUri(insertedUri);
         assertTrue("Values not inserted in the table", insertedId > 0);
 
         assertEquals("insertedUri should have an ID",
@@ -91,37 +94,37 @@ public class TestProvider extends AndroidTestCase {
 
         //insert a stub movie into SQLite
         ContentValues values = TestUtils.createStubMovie();
-        mContext.getContentResolver().insert(MovieContract.MovieTable.CONTENT_URI, values);
+        mContext.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
 
         //change the value
-        Integer votes = values.getAsInteger(MovieContract.MovieTable.COLUMN_VOTE_COUNT);
+        Integer votes = values.getAsInteger(MovieContract.MovieEntry.COLUMN_VOTE_COUNT);
         if (votes != null) {
             votesNotNull = true;
-            values.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, votes + 10);
+            values.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, votes + 10);
         } else {
             votesNotNull = false;
-            values.put(MovieContract.MovieTable.COLUMN_VOTE_COUNT, TestUtils.MOVIE_VOTE_COUNT); //put a dummy
+            values.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, TestUtils.MOVIE_VOTE_COUNT); //put a dummy
         }
 
         int updatedRows = mContext.getContentResolver().update(
-                MovieContract.MovieTable.CONTENT_URI,
+                MovieContract.MovieEntry.CONTENT_URI,
                 values,
-                MovieContract.MovieTable.COLUMN_TITLE + " = ? ",
+                MovieContract.MovieEntry.COLUMN_TITLE + " = ? ",
                 new String[]{TestUtils.MOVIE_TITLE}
         );
 
         assertEquals(updatedRows + " row(s) updated instead of only 1", 1, updatedRows);
 
         Cursor cursor = mContext.getContentResolver().query(
-                MovieContract.MovieTable.CONTENT_URI,
+                MovieContract.MovieEntry.CONTENT_URI,
                 null, // get all columns
-                MovieContract.MovieTable.COLUMN_TITLE + " = ? ",
+                MovieContract.MovieEntry.COLUMN_TITLE + " = ? ",
                 new String[]{TestUtils.MOVIE_TITLE},
                 null);
 
         assertTrue("No data queried", cursor.moveToFirst());
 
-        int votesColumnIndex = cursor.getColumnIndex(MovieContract.MovieTable.COLUMN_VOTE_COUNT);
+        int votesColumnIndex = cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_COUNT);
 
         if (votesNotNull) {
             assertEquals("Updated rows are not actually updated",
@@ -149,21 +152,21 @@ public class TestProvider extends AndroidTestCase {
         }
 
         int massInsertCount = getContext().getContentResolver().bulkInsert(
-                MovieContract.MovieTable.CONTENT_URI, list);
+                MovieContract.MovieEntry.CONTENT_URI, list);
 
         assertTrue("Some of the records not inserted", massInsertCount == list.length);
 
         //delete a single item
         int deleteOneRow = mContext.getContentResolver().delete(
-                MovieContract.MovieTable.CONTENT_URI,
-                MovieContract.MovieTable.COLUMN_TITLE + " = ?",
-                new String[]{list[0].getAsString(MovieContract.MovieTable.COLUMN_TITLE)}
+                MovieContract.MovieEntry.CONTENT_URI,
+                MovieContract.MovieEntry.COLUMN_TITLE + " = ?",
+                new String[]{list[0].getAsString(MovieContract.MovieEntry.COLUMN_TITLE)}
         );
 
         assertEquals("Didn't delete a single row", 1, deleteOneRow);
 
         // DELETE ALL THE RECORDS!
-        int deleted = mContext.getContentResolver().delete(MovieContract.MovieTable.CONTENT_URI, null, null);
+        int deleted = mContext.getContentResolver().delete(MovieContract.MovieEntry.CONTENT_URI, null, null);
 
         assertEquals("Not all records deleted", list.length, deleted + deleteOneRow);
 
@@ -183,12 +186,12 @@ public class TestProvider extends AndroidTestCase {
         }
 
         int massInsertCount = getContext().getContentResolver().bulkInsert(
-                MovieContract.MovieTable.CONTENT_URI, list);
+                MovieContract.MovieEntry.CONTENT_URI, list);
 
         assertTrue("Some of the records not inserted", massInsertCount == list.length);
 
         Cursor cursor = getContext().getContentResolver().query(
-                MovieContract.MovieTable.CONTENT_URI,
+                MovieContract.MovieEntry.CONTENT_URI,
                 null, null, null, null);
 
         assertTrue("Couldn't fetch anything from the DB", cursor.moveToFirst());
