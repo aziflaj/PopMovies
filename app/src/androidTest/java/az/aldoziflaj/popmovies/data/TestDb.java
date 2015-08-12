@@ -21,7 +21,7 @@ import static az.aldoziflaj.popmovies.data.MovieContract.TrailerEntry;
  */
 public class TestDb extends AndroidTestCase {
 
-    private SQLiteDatabase mDB;
+    private MovieDbHelper helper;
 
     void dropDatabase() {
         mContext.deleteDatabase(MovieDbHelper.DATABASE_NAME);
@@ -30,13 +30,14 @@ public class TestDb extends AndroidTestCase {
     @Override
     public void setUp() throws Exception {
         dropDatabase();
-        mDB = new MovieDbHelper(mContext).getWritableDatabase();
+        helper = new MovieDbHelper(mContext);
     }
 
     /**
      * Test if the database is created correctly and the table(s) have the necessary columns
      */
     public void testAllTablesCreated() {
+        SQLiteDatabase db = helper.getReadableDatabase();
         Set<String> tableNames = new HashSet<>();
         tableNames.add(MovieEntry.TABLE_NAME); //the table to check if created
         tableNames.add(ReviewEntry.TABLE_NAME); //the table to check if created
@@ -44,9 +45,9 @@ public class TestDb extends AndroidTestCase {
 
         dropDatabase();
 
-        assertTrue("Database not opened at all!", mDB.isOpen());
+        assertTrue("Database not opened at all!", db.isOpen());
 
-        Cursor cursor = mDB.rawQuery("SELECT name FROM sqlite_master WHERE type = 'table'", null);
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type = 'table'", null);
         assertTrue("Database not created correctly", cursor.moveToFirst());
 
         do {
@@ -57,11 +58,12 @@ public class TestDb extends AndroidTestCase {
         assertTrue("Some tables not created!", tableNames.isEmpty());
 
         cursor.close();
-        mDB.close();
+        db.close();
     }
 
     public void testMovieTableColumns() {
-        Cursor cursor = mDB.rawQuery("PRAGMA table_info(" + MovieEntry.TABLE_NAME + ")", null);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("PRAGMA table_info(" + MovieEntry.TABLE_NAME + ")", null);
 
         assertTrue("Error: Unable to query the database for table information.", cursor.moveToFirst());
 
@@ -86,7 +88,8 @@ public class TestDb extends AndroidTestCase {
     }
 
     public void testReviewTableColumns() {
-        Cursor cursor = mDB.rawQuery("PRAGMA table_info(" + ReviewEntry.TABLE_NAME + ")", null);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("PRAGMA table_info(" + ReviewEntry.TABLE_NAME + ")", null);
 
         assertTrue("Error: Unable to query the database for table information.", cursor.moveToFirst());
 
@@ -108,7 +111,8 @@ public class TestDb extends AndroidTestCase {
     }
 
     public void testTrailerTableColumns() {
-        Cursor cursor = mDB.rawQuery("PRAGMA table_info(" + TrailerEntry.TABLE_NAME + ")", null);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("PRAGMA table_info(" + TrailerEntry.TABLE_NAME + ")", null);
 
         assertTrue("Error: Unable to query the database for table information.", cursor.moveToFirst());
 
@@ -135,7 +139,7 @@ public class TestDb extends AndroidTestCase {
      */
     @Suppress
     public void testInsertion() {
-        SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
+        SQLiteDatabase db = helper.getWritableDatabase();
 
         //insert into the table
         ContentValues insertedValues = TestUtils.createStubMovie();
@@ -160,10 +164,5 @@ public class TestDb extends AndroidTestCase {
 
         cursor.close();
         db.close();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        mDB.close();
     }
 }
