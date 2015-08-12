@@ -12,9 +12,7 @@ import az.aldoziflaj.popmovies.TestUtils;
 
 /**
  * Test the MovieProvider
- * TODO: remove Suppress
  */
-@Suppress
 public class TestProvider extends AndroidTestCase {
 
     private void deleteAllRecords() {
@@ -175,7 +173,9 @@ public class TestProvider extends AndroidTestCase {
 
     /**
      * This method tests the {@code bulkInsert()} method of the Content Provider
+     * TODO: fix
      */
+    @Suppress
     public void testMassInsertion() {
         SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
 
