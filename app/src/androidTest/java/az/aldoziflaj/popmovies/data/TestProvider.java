@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.Suppress;
 
 import az.aldoziflaj.popmovies.TestUtils;
 
@@ -173,9 +172,7 @@ public class TestProvider extends AndroidTestCase {
 
     /**
      * This method tests the {@code bulkInsert()} method of the Content Provider
-     * TODO: fix
      */
-    @Suppress
     public void testMassInsertion() {
         SQLiteDatabase db = new MovieDbHelper(mContext).getWritableDatabase();
 

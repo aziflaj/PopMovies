@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.Suppress;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -135,9 +134,7 @@ public class TestDb extends AndroidTestCase {
 
     /**
      * Test if the inserted data corresponds with the same data read from the table
-     * TODO: remove Suppress
      */
-    @Suppress
     public void testInsertion() {
         SQLiteDatabase db = helper.getWritableDatabase();
 

@@ -16,7 +16,7 @@ import az.aldoziflaj.popmovies.data.MovieContract;
 public class TestUtils extends AndroidTestCase {
     public static final String MOVIE_TITLE = "Interstellar";
     public static final int MOVIE_VOTE_COUNT = 1234;
-    private static final double MOVIE_POPULARITY = 12.355;
+    private static final double MOVIE_POPULARITY = 12.3;
     private static final int MOVIE_RUNTIME = 139;
 
     /**
@@ -60,7 +60,7 @@ public class TestUtils extends AndroidTestCase {
             String expectedValue = entry.getValue().toString();
             String value = cursor.getString(idx);
 
-            assertEquals("Value read doesn't match the expected value" + errorMessage, expectedValue, value);
+            assertEquals(errorMessage + ": Value " + colName + " read doesn't match the expected value. ", expectedValue, value);
         }
 
     }
@@ -83,7 +83,7 @@ public class TestUtils extends AndroidTestCase {
             cv.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, MOVIE_VOTE_COUNT + i * 10);
             cv.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, "lorem ipsum dolor");
             cv.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, "/img_of_interstellar.jpg");
-            cv.put(MovieContract.MovieEntry.COLUMN_POPULARITY, MOVIE_POPULARITY + i * 2.3);
+            cv.put(MovieContract.MovieEntry.COLUMN_POPULARITY, MOVIE_POPULARITY + i);
             cv.put(MovieContract.MovieEntry.COLUMN_RUNTIME, MOVIE_RUNTIME + i * 12);
 
             contentValues.add(cv);
