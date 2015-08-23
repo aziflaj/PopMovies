@@ -70,6 +70,9 @@ public class Utility {
             String title = movie.getTitle();
             cValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
 
+            int movieId = movie.getMovieId();
+            cValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
+
             //get the poster url
             String posterPath = movie.getPosterPath();
             cValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, posterPath);
@@ -90,6 +93,12 @@ public class Utility {
             String description = movie.getDescription();
             cValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, description);
 
+            double popularity = movie.getPopularity();
+            cValues.put(MovieContract.MovieEntry.COLUMN_POPULARITY, popularity);
+
+            int runtime = movie.getRuntime();
+            cValues.put(MovieContract.MovieEntry.COLUMN_RUNTIME, runtime);
+
             cvList.add(cValues);
         }
 
@@ -103,5 +112,55 @@ public class Utility {
         } else {
             Log.d(LOG, itemsAdded + " records added into the DB");
         }
+    }
+
+    /**
+     *
+     * @param releaseDate
+     * @return
+     */
+    public static String getReleaseYear(String releaseDate) {
+        String[] explodedDate = releaseDate.split("/");
+        return explodedDate[2];
+    }
+
+    public static void storeMovie(Context context, AllMovies.MovieModel movie) {
+        ContentValues cValues = new ContentValues();
+
+        //get the movie data from the JSON response
+        //get the title
+        String title = movie.getTitle();
+        cValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
+
+        int movieId = movie.getMovieId();
+        cValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
+
+        //get the poster url
+        String posterPath = movie.getPosterPath();
+        cValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, posterPath);
+
+        //get the rating
+        double voteAverage = movie.getRating();
+        cValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+
+        //get the total number of votes
+        int totalVotes = movie.getVoteCount();
+        cValues.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, totalVotes);
+
+        //get the movie release date
+        String releaseDate = Utility.releaseDateFormatter(movie.getReleaseDate());
+        cValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
+
+        //get the description of the movie
+        String description = movie.getDescription();
+        cValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, description);
+
+        double popularity = movie.getPopularity();
+        cValues.put(MovieContract.MovieEntry.COLUMN_POPULARITY, popularity);
+
+        int runtime = movie.getRuntime();
+        cValues.put(MovieContract.MovieEntry.COLUMN_RUNTIME, runtime);
+
+        context.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cValues);
     }
 }

@@ -135,7 +135,7 @@ public class TestDb extends AndroidTestCase {
     /**
      * Test if the inserted data corresponds with the same data read from the table
      */
-    public void testInsertion() {
+    public void testMovieInsertion() {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         //insert into the table

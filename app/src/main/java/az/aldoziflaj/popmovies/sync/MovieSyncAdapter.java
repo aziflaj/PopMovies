@@ -19,12 +19,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import java.util.List;
+
 import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
-import az.aldoziflaj.popmovies.api.TmdbService;
 import az.aldoziflaj.popmovies.Utility;
 import az.aldoziflaj.popmovies.activities.MainActivity;
+import az.aldoziflaj.popmovies.api.TmdbService;
 import az.aldoziflaj.popmovies.api.models.AllMovies;
+import az.aldoziflaj.popmovies.api.models.MovieRuntime;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -90,11 +93,32 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Config.API_BASE_URL)
                 .build();
-        TmdbService tmdbService = restAdapter.create(TmdbService.class);
+        final TmdbService tmdbService = restAdapter.create(TmdbService.class);
+
+        //get list of movies
         tmdbService.getTopMovies(sortOrder, new Callback<AllMovies>() {
             @Override
             public void success(AllMovies allMovies, Response response) {
-                Utility.storeMovieList(getContext(), allMovies.getMovieList());
+                List<AllMovies.MovieModel> movieList = allMovies.getMovieList();
+
+                //TODO fetch runtime
+                for (final AllMovies.MovieModel movie : movieList) {
+                    tmdbService.getMovieRuntime(movie.getMovieId(), new Callback<MovieRuntime>() {
+                        @Override
+                        public void success(MovieRuntime movieRuntime, Response response) {
+                            movie.setRuntime(movieRuntime.getRuntime());
+                            Utility.storeMovie(getContext(), movie);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e("SyncAdapter", "Error: " + error);
+                        }
+                    });
+                }
+                //Utility.storeMovieList(getContext(), allMovies.getMovieList());
+                //TODO fetch reviews
+                //TODO fetch trailers
                 sendNotification();
             }
 
@@ -103,6 +127,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 Log.e("SyncAdapter", "Error: " + error);
             }
         });
+
 
     }
 

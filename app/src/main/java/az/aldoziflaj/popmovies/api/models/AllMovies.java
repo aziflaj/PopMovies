@@ -41,6 +41,8 @@ public class AllMovies {
         @SerializedName("popularity")
         private double mPopularity;
 
+        private int mRuntime = 0;
+
         public String getTitle() {
             return mTitle;
         }
@@ -71,6 +73,14 @@ public class AllMovies {
 
         public double getPopularity() {
             return mPopularity;
+        }
+
+        public void setRuntime(int runtime) {
+            mRuntime = runtime;
+        }
+
+        public int getRuntime() {
+            return mRuntime;
         }
     }
 }

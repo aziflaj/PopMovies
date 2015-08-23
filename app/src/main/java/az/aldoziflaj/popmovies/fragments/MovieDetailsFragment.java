@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
+import az.aldoziflaj.popmovies.Utility;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
 
@@ -64,11 +65,10 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
             return;
         }
 
-        //TODO: Populate with the new data
-        //TextView detailsTitle = (TextView) getView().findViewById(R.id.details_movie_title);
+        TextView detailsReleaseYear = (TextView) getView().findViewById(R.id.movie_year);
         ImageView detailsPoster = (ImageView) getView().findViewById(R.id.details_movie_poster);
         TextView detailsRating = (TextView) getView().findViewById(R.id.movie_rating);
-//        TextView detailsReleaseDate = (TextView) getView().findViewById(R.id.movie_release_date);
+        TextView detailsRuntime = (TextView) getView().findViewById(R.id.movie_length);
         TextView detailsOverview = (TextView) getView().findViewById(R.id.movie_description);
 
         String title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
@@ -76,6 +76,7 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
         double rating = cursor.getDouble(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE));
         String releaseDate = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE));
         int totalVotes = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_COUNT));
+        int movieRuntime = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RUNTIME));
         String overview = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_DESCRIPTION));
 
         Uri posterUri = Uri.parse(Config.IMAGE_BASE_URL).buildUpon()
@@ -87,15 +88,14 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 .placeholder(R.drawable.loading)
                 .into(detailsPoster);
 
+        detailsReleaseYear.setText(Utility.getReleaseYear(releaseDate));
+        detailsRuntime.setText(movieRuntime + "min");
+
         detailsOverview.setText(overview);
-//        detailsTitle.setText(title);
         getActivity().setTitle(title);
 
         detailsRating.setText(
                 String.format(getActivity().getString(R.string.format_ratings), rating, totalVotes));
-
-//        detailsReleaseDate.setText(
-//                String.format(getActivity().getString(R.string.format_release_date), releaseDate));
     }
 
     @Override
