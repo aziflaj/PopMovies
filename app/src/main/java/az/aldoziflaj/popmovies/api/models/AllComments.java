@@ -14,11 +14,18 @@ public class AllComments {
     }
 
     public static class Comment {
+        @SerializedName("id")
+        private String id;
+
         @SerializedName("author")
         private String author;
 
         @SerializedName("content")
         private String content;
+
+        public String getId() {
+            return id;
+        }
 
         public String getAuthor() {
             return author;

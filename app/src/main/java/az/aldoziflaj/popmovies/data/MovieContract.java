@@ -5,9 +5,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * TODO: Create a bulkUpdate method. It should update (insert if missing) the data in the DB based on a ContentValues[]
- */
 public class MovieContract {
 
     // Content Authority => The name of the Content Provider

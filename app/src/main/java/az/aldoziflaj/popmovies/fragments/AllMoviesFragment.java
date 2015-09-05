@@ -104,7 +104,6 @@ public class AllMoviesFragment extends Fragment implements LoaderManager.LoaderC
         final int NUMBER_OF_MOVIES = 20;
 
         if (sortOrderSetting.equals(getString(R.string.prefs_sort_default_value))) {
-            //TODO:sort by popularity
             sortOrder = MovieContract.MovieEntry.COLUMN_POPULARITY + " DESC";
         } else {
             //sort by rating

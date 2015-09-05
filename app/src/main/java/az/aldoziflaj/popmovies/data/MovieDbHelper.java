@@ -27,7 +27,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 + MovieContract.MovieEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, "
                 + MovieContract.MovieEntry.COLUMN_IMAGE_URL + " TEXT NOT NULL, "
                 + MovieContract.MovieEntry.COLUMN_POPULARITY + " REAL NOT NULL, "
-                + MovieContract.MovieEntry.COLUMN_RUNTIME + " INTEGER NOT NULL, "
+                + MovieContract.MovieEntry.COLUMN_RUNTIME + " INTEGER, "
                 + " UNIQUE (" + MovieContract.MovieEntry.COLUMN_TITLE + ") ON CONFLICT REPLACE);";
 
         final String createTrailersTable = "CREATE TABLE " + MovieContract.TrailerEntry.TABLE_NAME + " ( "

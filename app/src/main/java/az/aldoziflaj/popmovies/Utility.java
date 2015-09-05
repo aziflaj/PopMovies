@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import az.aldoziflaj.popmovies.api.models.AllComments;
 import az.aldoziflaj.popmovies.api.models.AllMovies;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
@@ -96,9 +97,6 @@ public class Utility {
             double popularity = movie.getPopularity();
             cValues.put(MovieContract.MovieEntry.COLUMN_POPULARITY, popularity);
 
-            int runtime = movie.getRuntime();
-            cValues.put(MovieContract.MovieEntry.COLUMN_RUNTIME, runtime);
-
             cvList.add(cValues);
         }
 
@@ -115,7 +113,6 @@ public class Utility {
     }
 
     /**
-     *
      * @param releaseDate
      * @return
      */
@@ -124,43 +121,54 @@ public class Utility {
         return explodedDate[2];
     }
 
-    public static void storeMovie(Context context, AllMovies.MovieModel movie) {
-        ContentValues cValues = new ContentValues();
+    /**
+     * TODO: JavaDoc
+     *
+     * @param context
+     * @param movieId
+     * @param runtime
+     * @return
+     */
+    public static int updateMovieWithRuntime(Context context, int movieId, int runtime) {
+        ContentValues values = new ContentValues();
+        values.put(MovieContract.MovieEntry.COLUMN_RUNTIME, runtime);
 
-        //get the movie data from the JSON response
-        //get the title
-        String title = movie.getTitle();
-        cValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
+        return context.getContentResolver().update(
+                MovieContract.MovieEntry.CONTENT_URI,
+                values,
+                MovieContract.MovieEntry.COLUMN_MOVIE_ID + "= ?",
+                new String[]{Integer.toString(movieId)}
+        );
+    }
 
-        int movieId = movie.getMovieId();
-        cValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movieId);
+    public static void storeCommentList(Context context, int movieId, List<AllComments.Comment> commentList) {
+        ArrayList<ContentValues> cvList = new ArrayList<>();
+        int commentListLength = commentList.size();
+        Log.d(LOG, commentListLength + " comments for movie with id " + movieId);
 
-        //get the poster url
-        String posterPath = movie.getPosterPath();
-        cValues.put(MovieContract.MovieEntry.COLUMN_IMAGE_URL, posterPath);
+        for (int i = 0; i < commentListLength; i++) {
+            AllComments.Comment c = commentList.get(i);
+            ContentValues cv = new ContentValues();
 
-        //get the rating
-        double voteAverage = movie.getRating();
-        cValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+            cv.put(MovieContract.ReviewEntry.COLUMN_REVIEW_ID, c.getId());
+            cv.put(MovieContract.ReviewEntry.COLUMN_AUTHOR, c.getAuthor());
+            cv.put(MovieContract.ReviewEntry.COLUMN_CONTENT, c.getContent());
+            cv.put(MovieContract.ReviewEntry.COLUMN_MOVIE_ID, movieId);
 
-        //get the total number of votes
-        int totalVotes = movie.getVoteCount();
-        cValues.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, totalVotes);
+            cvList.add(cv);
+        }
 
-        //get the movie release date
-        String releaseDate = Utility.releaseDateFormatter(movie.getReleaseDate());
-        cValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
+        ContentValues[] values = new ContentValues[cvList.size()];
+        cvList.toArray(values);
 
-        //get the description of the movie
-        String description = movie.getDescription();
-        cValues.put(MovieContract.MovieEntry.COLUMN_DESCRIPTION, description);
+        int commentsAdded = context.getContentResolver().bulkInsert(
+                MovieContract.ReviewEntry.CONTENT_URI,
+                values);
 
-        double popularity = movie.getPopularity();
-        cValues.put(MovieContract.MovieEntry.COLUMN_POPULARITY, popularity);
-
-        int runtime = movie.getRuntime();
-        cValues.put(MovieContract.MovieEntry.COLUMN_RUNTIME, runtime);
-
-        context.getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, cValues);
+        if (commentsAdded != commentListLength) {
+            Log.d(LOG, String.format("%d/%d comments inserted", commentsAdded, commentListLength));
+        } else {
+            Log.d(LOG, commentsAdded + " comments added");
+        }
     }
 }
