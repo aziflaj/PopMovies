@@ -28,6 +28,7 @@ import az.aldoziflaj.popmovies.activities.MainActivity;
 import az.aldoziflaj.popmovies.api.TmdbService;
 import az.aldoziflaj.popmovies.api.models.AllComments;
 import az.aldoziflaj.popmovies.api.models.AllMovies;
+import az.aldoziflaj.popmovies.api.models.AllTrailers;
 import az.aldoziflaj.popmovies.api.models.MovieRuntime;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -183,7 +184,40 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                         }
                     });
 
-                    //TODO fetch trailers
+                    tmdbService.getMovieTrailers(movie.getMovieId(), new Callback<AllTrailers>() {
+                        @Override
+                        public void success(AllTrailers allTrailers, Response response) {
+                            Utility.storeTrailerList(getContext(), movie.getMovieId(), allTrailers.getTrailerList());
+                            /*
+                            // This is just for testing
+                            Cursor c = getContext().getContentResolver().query(
+                                    MovieContract.TrailerEntry.CONTENT_URI,
+                                    new String[]{MovieContract.TrailerEntry._ID,
+                                            MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY},
+                                    MovieContract.TrailerEntry.COLUMN_MOVIE_ID + "= ?",
+                                    new String[]{Integer.toString(movie.getMovieId())},
+                                    null
+                            );
+                            if (c.moveToFirst()) {
+                                do {
+                                    int youtubeKeyColIndex = c.getColumnIndex(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY);
+                                    String youtubeKey = c.getString(youtubeKeyColIndex);
+                                    Log.d("Movie - Get Trailers",
+                                            String.format("%s has this key trailer: %s",
+                                                    movie.getTitle(), youtubeKey));
+                                } while (c.moveToNext());
+                            } else {
+                                Log.e("Movie - Get Trailers", "Not read!");
+                            }
+                            c.close();
+                            //*/
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e("SyncAdapter", "Error: " + error);
+                        }
+                    });
                 }
 
                 sendNotification();

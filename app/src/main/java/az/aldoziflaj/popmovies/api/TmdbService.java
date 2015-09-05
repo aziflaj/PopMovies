@@ -42,6 +42,12 @@ public interface TmdbService {
     @GET("/movie/{id}/reviews?api_key=" + Config.API_KEY)
     void getMovieReviews(@Path("id") int id, Callback<AllComments> callback);
 
+    /**
+     * This method sends a GET request for fetching the trailers of a given movie
+     *
+     * @param id       The id of the movie
+     * @param callback A {@code retrofit.Callback} to be called after the response is received
+     */
     @GET("/movie/{id}/videos?api_key=" + Config.API_KEY)
     void getMovieTrailers(@Path("id") int id, Callback<AllTrailers> callback);
 }

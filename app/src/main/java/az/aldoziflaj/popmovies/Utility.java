@@ -11,6 +11,7 @@ import java.util.List;
 
 import az.aldoziflaj.popmovies.api.models.AllComments;
 import az.aldoziflaj.popmovies.api.models.AllMovies;
+import az.aldoziflaj.popmovies.api.models.AllTrailers;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
 /**
@@ -122,12 +123,12 @@ public class Utility {
     }
 
     /**
-     * TODO: JavaDoc
+     * Update the runtime of a given movie, after fetching the runtime from the cloud service
      *
-     * @param context
-     * @param movieId
-     * @param runtime
-     * @return
+     * @param context The application context
+     * @param movieId The MOVIE_ID column of the movie to update with the runtime
+     * @param runtime The runtime of the movie
+     * @return The number of updated rows
      */
     public static int updateMovieWithRuntime(Context context, int movieId, int runtime) {
         ContentValues values = new ContentValues();
@@ -141,6 +142,13 @@ public class Utility {
         );
     }
 
+    /**
+     * Store a list of comments of a given movie into the DB
+     *
+     * @param context     The application context
+     * @param movieId     The MOVIE_ID column of the movie owning the comments
+     * @param commentList A {@code List<AllComments.Comment>} fetched from the cloud service
+     */
     public static void storeCommentList(Context context, int movieId, List<AllComments.Comment> commentList) {
         ArrayList<ContentValues> cvList = new ArrayList<>();
         int commentListLength = commentList.size();
@@ -169,6 +177,44 @@ public class Utility {
             Log.d(LOG, String.format("%d/%d comments inserted", commentsAdded, commentListLength));
         } else {
             Log.d(LOG, commentsAdded + " comments added");
+        }
+    }
+
+    /**
+     * Store a list of trailers belonging to a given movie
+     *
+     * @param context     The application context
+     * @param movieId     The MOVIE_ID of the movie having the trailers
+     * @param trailerList The list of {@code AllTrailers.MovieTrailer} that is being stored
+     */
+    public static void storeTrailerList(Context context, int movieId, List<AllTrailers.MovieTrailer> trailerList) {
+        ArrayList<ContentValues> cvList = new ArrayList<>();
+        int trailerListLength = trailerList.size();
+        Log.d(LOG, trailerListLength + " comments for movie with id " + movieId);
+
+        for (int i = 0; i < trailerListLength; i++) {
+            AllTrailers.MovieTrailer trailer = trailerList.get(i);
+            ContentValues cv = new ContentValues();
+
+            cv.put(MovieContract.TrailerEntry.COLUMN_MOVIE_ID, movieId);
+            cv.put(MovieContract.TrailerEntry.COLUMN_TRAILER_ID, trailer.getId());
+            cv.put(MovieContract.TrailerEntry.COLUMN_TITLE, trailer.getTrailerTitle());
+            cv.put(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY, trailer.getKey());
+
+            cvList.add(cv);
+        }
+
+        ContentValues[] values = new ContentValues[cvList.size()];
+        cvList.toArray(values);
+
+        int trailersAdded = context.getContentResolver().bulkInsert(
+                MovieContract.TrailerEntry.CONTENT_URI,
+                values);
+
+        if (trailersAdded != trailerListLength) {
+            Log.d(LOG, String.format("%d/%d trailers inserted", trailersAdded, trailerListLength));
+        } else {
+            Log.d(LOG, trailersAdded + " trailers added");
         }
     }
 }

@@ -9,11 +9,13 @@ public class AllTrailers {
     @SerializedName("results")
     private List<MovieTrailer> trailerList;
 
-    public List<MovieTrailer> getMovieList() {
+    public List<MovieTrailer> getTrailerList() {
         return trailerList;
     }
 
     public static class MovieTrailer {
+        @SerializedName("id")
+        private String mId;
 
         @SerializedName("key")
         private String mKey;
@@ -23,6 +25,10 @@ public class AllTrailers {
 
         @SerializedName("site")
         private String mSite;
+
+        public String getId() {
+            return mId;
+        }
 
         public String getKey() {
             return mKey;
