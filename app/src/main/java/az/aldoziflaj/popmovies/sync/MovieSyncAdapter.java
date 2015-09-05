@@ -106,7 +106,6 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                 Utility.storeMovieList(getContext(), movieList);
 
                 for (final AllMovies.MovieModel movie : movieList) {
-                    //TODO fetch runtime
                     tmdbService.getMovieRuntime(movie.getMovieId(), new Callback<MovieRuntime>() {
                         @Override
                         public void success(MovieRuntime movieRuntime, Response response) {
@@ -132,6 +131,7 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                             } else {
                                 Log.e("Movie - Get Runtime", "Not read!");
                             }
+                            c.close();
                             //*/
                         }
 
@@ -141,20 +141,40 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                         }
                     });
 
-                    //TODO fetch reviews
                     tmdbService.getMovieReviews(movie.getMovieId(), new Callback<AllComments>() {
                         @Override
                         public void success(AllComments allComments, Response response) {
                             List<AllComments.Comment> commentList = allComments.getCommentList();
 
                             Utility.storeCommentList(getContext(), movie.getMovieId(), commentList);
+                            /*
+                            // This is just for testing
+                            Cursor c = getContext().getContentResolver().query(
+                                    MovieContract.ReviewEntry.CONTENT_URI,
+                                    new String[]{MovieContract.ReviewEntry._ID,
+                                            MovieContract.ReviewEntry.COLUMN_AUTHOR,
+                                            MovieContract.ReviewEntry.COLUMN_CONTENT},
+                                    MovieContract.ReviewEntry.COLUMN_MOVIE_ID + "= ?",
+                                    new String[]{Integer.toString(movie.getMovieId())},
+                                    null
+                            );
 
-                            for (AllComments.Comment comment : commentList) {
-                                // TODO: READ FROM DB
-                                Log.d("Movie - Get Comments",
-                                        String.format("%s says: %s",
-                                                comment.getAuthor(), comment.getContent()));
+                            if (c.moveToFirst()) {
+                                do {
+                                    int authorColIndex = c.getColumnIndex(MovieContract.ReviewEntry.COLUMN_AUTHOR);
+                                    int contentColIndex = c.getColumnIndex(MovieContract.ReviewEntry.COLUMN_CONTENT);
+
+                                    Log.d("Movie - Get Comments",
+                                            String.format("%s says: %s",
+                                                    c.getString(authorColIndex),
+                                                    c.getString(contentColIndex)));
+
+                                } while (c.moveToNext());
+                            } else {
+                                Log.d("Movie - Get Comments", "No comments");
                             }
+                            c.close();
+                            //*/
                         }
 
                         @Override
