@@ -43,6 +43,7 @@ public class MovieContract {
         public static final String COLUMN_IMAGE_URL = "image_url";
         public static final String COLUMN_POPULARITY = "popularity";
         public static final String COLUMN_RUNTIME = "runtime";
+        public static final String COLUMN_FAVORITE = "favorite"; // pseudo-boolean for favorite movie
 
 
         /**

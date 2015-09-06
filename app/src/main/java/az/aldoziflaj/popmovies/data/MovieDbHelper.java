@@ -6,8 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MovieDbHelper extends SQLiteOpenHelper {
 
-    //increment this if the DB changes
-    static final int DATABASE_VERSION = 2;
+    /**
+     * 1. First half of the task. Only show movies and their details
+     * 2. Second half of the task. Show trailers, reviews for each movie, and add the runtime of
+     *    each movie.
+     * 3. Add a column for favorited movie.
+     */
+    static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_NAME = "movies.db";
 
@@ -28,6 +33,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 + MovieContract.MovieEntry.COLUMN_IMAGE_URL + " TEXT NOT NULL, "
                 + MovieContract.MovieEntry.COLUMN_POPULARITY + " REAL NOT NULL, "
                 + MovieContract.MovieEntry.COLUMN_RUNTIME + " INTEGER, "
+                + MovieContract.MovieEntry.COLUMN_FAVORITE + " INTEGER DEFAULT 0, "
                 + " UNIQUE (" + MovieContract.MovieEntry.COLUMN_TITLE + ") ON CONFLICT REPLACE);";
 
         final String createTrailersTable = "CREATE TABLE " + MovieContract.TrailerEntry.TABLE_NAME + " ( "
