@@ -114,8 +114,10 @@ public class Utility {
     }
 
     /**
-     * @param releaseDate
-     * @return
+     * Fetches the release year of a movie from its release date
+     *
+     * @param releaseDate The stringly-typed release date
+     * @return The release year
      */
     public static String getReleaseYear(String releaseDate) {
         String[] explodedDate = releaseDate.split("/");
@@ -216,5 +218,25 @@ public class Utility {
         } else {
             Log.d(LOG, trailersAdded + " trailers added");
         }
+    }
+
+
+    /**
+     * Checks if one day has passed since the last timestamp checked
+     *
+     * @param lastTimestamp The last timestamp checked
+     * @return True if one day has passed, false otherwise
+     */
+    public static boolean isOneDayLater(long lastTimestamp) {
+        // 1000 milliseconds/second *
+        // 60 seconds/minute *
+        // 60 minutes/hour *
+        // 24 hours/day
+        final long ONE_DAY = 1000 * 60 * 60 * 24;
+
+        long now = System.currentTimeMillis();
+
+        long timePassed = now - lastTimestamp;
+        return (timePassed > ONE_DAY);
     }
 }

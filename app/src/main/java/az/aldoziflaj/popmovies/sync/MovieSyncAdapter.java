@@ -39,8 +39,8 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
     // time in seconds when to sync
     public static final int SYNC_INTERVAL = 60 * 60 * 10; // 10 hours
-    private static final long ONE_DAY = 1000 * 60 * 60 * 24;
     private static final int MOVIE_NOTIFICATION_ID = 1001;
+    private static long lastSyncTime = 0L;
 
     public MovieSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -90,28 +90,29 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        String sortOrder = Utility.getPreferredSortOrder(getContext());
+        if (Utility.isOneDayLater(lastSyncTime)) {
+            String sortOrder = Utility.getPreferredSortOrder(getContext());
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(Config.API_BASE_URL)
-                .build();
-        final TmdbService tmdbService = restAdapter.create(TmdbService.class);
+            RestAdapter restAdapter = new RestAdapter.Builder()
+                    .setEndpoint(Config.API_BASE_URL)
+                    .build();
+            final TmdbService tmdbService = restAdapter.create(TmdbService.class);
 
-        //get list of movies
-        tmdbService.getTopMovies(sortOrder, new Callback<AllMovies>() {
-            @Override
-            public void success(AllMovies allMovies, Response response) {
-                List<AllMovies.MovieModel> movieList = allMovies.getMovieList();
+            //get list of movies
+            tmdbService.getTopMovies(sortOrder, new Callback<AllMovies>() {
+                @Override
+                public void success(AllMovies allMovies, Response response) {
+                    List<AllMovies.MovieModel> movieList = allMovies.getMovieList();
 
-                // store all movies in the DB
-                Utility.storeMovieList(getContext(), movieList);
+                    // store all movies in the DB
+                    Utility.storeMovieList(getContext(), movieList);
 
-                for (final AllMovies.MovieModel movie : movieList) {
-                    tmdbService.getMovieRuntime(movie.getMovieId(), new Callback<MovieRuntime>() {
-                        @Override
-                        public void success(MovieRuntime movieRuntime, Response response) {
-                            int runtime = movieRuntime.getRuntime();
-                            Utility.updateMovieWithRuntime(getContext(), movie.getMovieId(), runtime);
+                    for (final AllMovies.MovieModel movie : movieList) {
+                        tmdbService.getMovieRuntime(movie.getMovieId(), new Callback<MovieRuntime>() {
+                            @Override
+                            public void success(MovieRuntime movieRuntime, Response response) {
+                                int runtime = movieRuntime.getRuntime();
+                                Utility.updateMovieWithRuntime(getContext(), movie.getMovieId(), runtime);
 
                             /*
                             // This is just for testing
@@ -134,20 +135,20 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                             }
                             c.close();
                             //*/
-                        }
+                            }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("SyncAdapter", "Error: " + error);
-                        }
-                    });
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e("SyncAdapter", "Error: " + error);
+                            }
+                        });
 
-                    tmdbService.getMovieReviews(movie.getMovieId(), new Callback<AllComments>() {
-                        @Override
-                        public void success(AllComments allComments, Response response) {
-                            List<AllComments.Comment> commentList = allComments.getCommentList();
+                        tmdbService.getMovieReviews(movie.getMovieId(), new Callback<AllComments>() {
+                            @Override
+                            public void success(AllComments allComments, Response response) {
+                                List<AllComments.Comment> commentList = allComments.getCommentList();
 
-                            Utility.storeCommentList(getContext(), movie.getMovieId(), commentList);
+                                Utility.storeCommentList(getContext(), movie.getMovieId(), commentList);
                             /*
                             // This is just for testing
                             Cursor c = getContext().getContentResolver().query(
@@ -176,18 +177,18 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                             }
                             c.close();
                             //*/
-                        }
+                            }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("SyncAdapter", "Error: " + error);
-                        }
-                    });
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e("SyncAdapter", "Error: " + error);
+                            }
+                        });
 
-                    tmdbService.getMovieTrailers(movie.getMovieId(), new Callback<AllTrailers>() {
-                        @Override
-                        public void success(AllTrailers allTrailers, Response response) {
-                            Utility.storeTrailerList(getContext(), movie.getMovieId(), allTrailers.getTrailerList());
+                        tmdbService.getMovieTrailers(movie.getMovieId(), new Callback<AllTrailers>() {
+                            @Override
+                            public void success(AllTrailers allTrailers, Response response) {
+                                Utility.storeTrailerList(getContext(), movie.getMovieId(), allTrailers.getTrailerList());
                             /*
                             // This is just for testing
                             Cursor c = getContext().getContentResolver().query(
@@ -211,23 +212,24 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
                             }
                             c.close();
                             //*/
-                        }
+                            }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("SyncAdapter", "Error: " + error);
-                        }
-                    });
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e("SyncAdapter", "Error: " + error);
+                            }
+                        });
+                    }
+
+                    sendNotification();
                 }
 
-                sendNotification();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("SyncAdapter", "Error: " + error);
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("SyncAdapter", "Error: " + error);
+                }
+            });
+        }
     }
 
     private void sendNotification() {
@@ -239,9 +241,9 @@ public class MovieSyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         String lastNotificationKey = getContext().getString(R.string.prefs_notification_last_key);
-        long lastSyncTime = prefs.getLong(lastNotificationKey, 0);
+        lastSyncTime = prefs.getLong(lastNotificationKey, 0);
 
-        if (System.currentTimeMillis() - lastSyncTime >= ONE_DAY) {
+        if (Utility.isOneDayLater(lastSyncTime)) {
             //Show notification
 
             int smallIcon = R.mipmap.ic_launcher;
