@@ -20,9 +20,7 @@ import az.aldoziflaj.popmovies.activities.MovieDetailsActivity;
 import az.aldoziflaj.popmovies.adapters.MovieAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
-/**
- * TODO: Show a GridView of movies marked as favorite
- */
+
 public class FavoritesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = FavoritesFragment.class.getSimpleName();
     public static final int FAVORITE_LOADER = 0;
