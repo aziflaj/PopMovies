@@ -28,6 +28,8 @@ import az.aldoziflaj.popmovies.data.MovieContract;
 public class MovieDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
     public static final int DETAILS_LOADER = 0;
+    public static final int TRAILERS_LOADER = 1;
+    public static final int REVIEWS_LOADER = 2;
 
     public MovieDetailsFragment() {
     }
@@ -41,6 +43,8 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAILS_LOADER, null, this);
+        getLoaderManager().initLoader(TRAILERS_LOADER, null, this);
+        getLoaderManager().initLoader(REVIEWS_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -52,14 +56,56 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
             return null;
         }
 
-        return new CursorLoader(
-                getActivity(),
-                intent.getData(),
-                null, null, null, null);
+        Log.d(LOG_TAG, "Creating loader");
+        switch (id) {
+            case DETAILS_LOADER:
+                Log.d(LOG_TAG, "Details loader");
+                return new CursorLoader(
+                        getActivity(),
+                        intent.getData(),
+                        null, null, null, null);
+
+            case TRAILERS_LOADER:
+                Log.d(LOG_TAG, "Trailers loader");
+                return null;
+
+            case REVIEWS_LOADER:
+                Log.d(LOG_TAG, "Reviews loader");
+                return null;
+
+            default:
+                Log.e(LOG_TAG, "Miscellaneous loader (?!)");
+                throw new UnsupportedOperationException("Unknown loader");
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        switch (loader.getId()) {
+            case DETAILS_LOADER:
+                loadMovieDetails(cursor);
+                break;
+
+            case TRAILERS_LOADER:
+                Log.d(LOG_TAG, "Loading Trailers");
+                break;
+
+            case REVIEWS_LOADER:
+                Log.d(LOG_TAG, "Loading Reviews");
+                break;
+
+            default:
+                Log.e(LOG_TAG, "Loading something miscellaneous?!");
+                //error
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    private void loadMovieDetails(Cursor cursor) {
         if (!cursor.moveToFirst()) {
             return;
         }
@@ -166,10 +212,5 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 }
             }
         });
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 }
