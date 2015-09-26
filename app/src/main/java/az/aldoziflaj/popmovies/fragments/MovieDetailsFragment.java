@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
 import az.aldoziflaj.popmovies.Utility;
+import az.aldoziflaj.popmovies.adapters.TrailersAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
 
@@ -100,7 +103,7 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 break;
 
             case TRAILERS_LOADER:
-                Log.d(LOG_TAG, "Loading Trailers");
+                loadMovieTrailers(cursor);
                 break;
 
             case REVIEWS_LOADER:
@@ -221,6 +224,31 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                     default:
                         Log.e(LOG_TAG, "What is this?!");
 
+                }
+            }
+        });
+    }
+
+    private void loadMovieTrailers(Cursor cursor) {
+        if (getView() == null) {
+            return; //error
+        }
+
+        ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_listview);
+        TrailersAdapter adapter = new TrailersAdapter(getActivity(), cursor, 0);
+        trailerListView.setAdapter(adapter);
+
+        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                if (cursor != null) {
+                    int youtubeKeyColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY);
+                    String youtubeKey = cursor.getString(youtubeKeyColumn);
+                    Uri videoUri = Uri.parse(Config.YOUTUBE_TRAILER_URL + youtubeKey);
+
+                    Intent playTrailer = new Intent(Intent.ACTION_VIEW, videoUri);
+                    startActivity(playTrailer);
                 }
             }
         });

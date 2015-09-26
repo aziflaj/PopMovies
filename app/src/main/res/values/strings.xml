@@ -12,6 +12,7 @@
 
     <string name="details.button.favorite.add">Mark as favorite</string>
     <string name="details.button.favorite.remove">Unmark as favorite</string>
+    <string name="details.trailers.header">Trailers: </string>
 
     <!-- API keys and possible values -->
     <string name="api.sort.popularity" translatable="false">popularity.desc</string>
