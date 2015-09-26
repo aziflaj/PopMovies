@@ -3,6 +3,8 @@ package az.aldoziflaj.popmovies;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -238,5 +240,30 @@ public class Utility {
 
         long timePassed = now - lastTimestamp;
         return (timePassed > ONE_DAY);
+    }
+
+    /**
+     * Fetches the movie id from the database, as fetched from the cloud service
+     *
+     * @param context  The application context
+     * @param movieUri The URI of the movie, pointing in the movie table
+     * @return The movie id, or -1 if something goes wrong
+     */
+    public static int fetchMovieIdFromUri(Context context, Uri movieUri) {
+        long _id = MovieContract.MovieEntry.getIdFromUri(movieUri);
+
+        Cursor c = context.getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
+                new String[]{MovieContract.MovieEntry._ID, MovieContract.MovieEntry.COLUMN_MOVIE_ID},
+                MovieContract.MovieEntry._ID + " = ?",
+                new String[]{String.valueOf(_id)},
+                null);
+
+        if (c.moveToFirst()) {
+            int movieIdIndex = c.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+            return c.getInt(movieIdIndex);
+        } else {
+            return -1;
+        }
     }
 }

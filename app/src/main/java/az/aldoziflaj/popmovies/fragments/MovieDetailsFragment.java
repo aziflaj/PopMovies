@@ -56,25 +56,38 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
             return null;
         }
 
-        Log.d(LOG_TAG, "Creating loader");
+        Uri movieUri = intent.getData();
+        int movieId = Utility.fetchMovieIdFromUri(getActivity(), movieUri);
+
         switch (id) {
             case DETAILS_LOADER:
                 Log.d(LOG_TAG, "Details loader");
                 return new CursorLoader(
                         getActivity(),
-                        intent.getData(),
+                        movieUri,
                         null, null, null, null);
 
             case TRAILERS_LOADER:
                 Log.d(LOG_TAG, "Trailers loader");
-                return null;
+                return new CursorLoader(
+                        getActivity(),
+                        MovieContract.TrailerEntry.CONTENT_URI,
+                        null, // all columns
+                        MovieContract.TrailerEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{String.valueOf(movieId)},
+                        null);
 
             case REVIEWS_LOADER:
                 Log.d(LOG_TAG, "Reviews loader");
-                return null;
+                return new CursorLoader(
+                        getActivity(),
+                        MovieContract.ReviewEntry.CONTENT_URI,
+                        null, // all columns
+                        MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{String.valueOf(movieId)},
+                        null);
 
             default:
-                Log.e(LOG_TAG, "Miscellaneous loader (?!)");
                 throw new UnsupportedOperationException("Unknown loader");
         }
     }
@@ -96,7 +109,6 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
 
             default:
                 Log.e(LOG_TAG, "Loading something miscellaneous?!");
-                //error
         }
     }
 
