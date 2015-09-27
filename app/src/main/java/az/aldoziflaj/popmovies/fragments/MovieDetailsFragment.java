@@ -101,11 +101,11 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 break;
 
             case TRAILERS_LOADER:
-//                loadMovieTrailers(cursor);
+                loadMovieTrailers(cursor);
                 break;
 
             case REVIEWS_LOADER:
-                loadMovieReviews(cursor);
+//                loadMovieReviews(cursor);
                 break;
 
             default:
