@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:src="@drawable/interstellar" />
 
         <TextView
             android:id="@+id/movie_year"
@@ -28,6 +29,7 @@
             android:layout_toRightOf="@id/details_movie_poster"
             android:gravity="center"
             android:paddingBottom="8dp"
+            android:text="2014"
             android:textColor="@color/gray"
             android:textSize="@dimen/font_larger" />
 
@@ -39,6 +41,7 @@
             android:layout_toEndOf="@id/details_movie_poster"
             android:layout_toRightOf="@id/details_movie_poster"
             android:paddingBottom="8dp"
+            android:text="120min"
             android:textColor="@color/gray_dark"
             android:textSize="@dimen/font_large"
             android:textStyle="bold|italic" />
@@ -51,6 +54,7 @@
             android:layout_toEndOf="@id/details_movie_poster"
             android:layout_toRightOf="@id/details_movie_poster"
             android:paddingBottom="8dp"
+            android:text="6.8 / 10 (1245 votes)"
             android:textColor="@color/black"
             android:textSize="@dimen/font_small" />
 
@@ -72,6 +76,24 @@
     <TextView
         android:id="@+id/movie_description"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum" />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray_dark" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/details.trailers.header" />
+
+    <ListView
+        android:id="@+id/trailer_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

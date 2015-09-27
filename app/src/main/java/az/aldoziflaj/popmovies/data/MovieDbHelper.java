@@ -11,8 +11,9 @@ public class MovieDbHelper extends SQLiteOpenHelper {
      * 2. Second half of the task. Show trailers, reviews for each movie, and add the runtime of
      *    each movie.
      * 3. Add a column for favorited movie.
+     * 4. Make the review_id and trailer_id unique (A good developer would have seen this coming!)
      */
-    static final int DATABASE_VERSION = 3;
+    static final int DATABASE_VERSION = 4;
 
     static final String DATABASE_NAME = "movies.db";
 
@@ -41,18 +42,20 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 + MovieContract.TrailerEntry.COLUMN_TITLE + " TEXT NOT NULL, "
                 + MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY + " TEXT NOT NULL, "
                 + MovieContract.TrailerEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
-                + MovieContract.TrailerEntry.COLUMN_TRAILER_ID + " INTEGER NOT NULL, "
-                + " FOREIGN KEY (" + MovieContract.TrailerEntry.COLUMN_MOVIE_ID + ") REFERENCES " +
-                MovieContract.MovieEntry.TABLE_NAME + " (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + "));";
+                + MovieContract.TrailerEntry.COLUMN_TRAILER_ID + " TEXT NOT NULL, "
+                + " FOREIGN KEY (" + MovieContract.TrailerEntry.COLUMN_MOVIE_ID + ") REFERENCES "
+                + MovieContract.MovieEntry.TABLE_NAME + " (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + "),"
+                + "UNIQUE (" + MovieContract.TrailerEntry.COLUMN_TRAILER_ID + ") ON CONFLICT REPLACE);";
 
         final String createReviewsTable = "CREATE TABLE " + MovieContract.ReviewEntry.TABLE_NAME + " ( "
                 + MovieContract.ReviewEntry._ID + " INTEGER PRIMARY KEY, "
                 + MovieContract.ReviewEntry.COLUMN_AUTHOR + " TEXT NOT NULL, "
                 + MovieContract.ReviewEntry.COLUMN_CONTENT + " TEXT NOT NULL, "
                 + MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "
-                + MovieContract.ReviewEntry.COLUMN_REVIEW_ID + " INTEGER NOT NULL, "
-                + " FOREIGN KEY (" + MovieContract.ReviewEntry.COLUMN_MOVIE_ID + ") REFERENCES " +
-                MovieContract.MovieEntry.TABLE_NAME + " (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + "));";
+                + MovieContract.ReviewEntry.COLUMN_REVIEW_ID + " TEXT NOT NULL, "
+                + " FOREIGN KEY (" + MovieContract.ReviewEntry.COLUMN_MOVIE_ID + ") REFERENCES "
+                + MovieContract.MovieEntry.TABLE_NAME + " (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + "),"
+                + "UNIQUE (" + MovieContract.ReviewEntry.COLUMN_REVIEW_ID + ") ON CONFLICT REPLACE);";
 
         db.execSQL(createMoviesTable);
         db.execSQL(createTrailersTable);

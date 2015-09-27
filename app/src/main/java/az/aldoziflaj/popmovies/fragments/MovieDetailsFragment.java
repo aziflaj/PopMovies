@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,12 +24,16 @@ import com.squareup.picasso.Picasso;
 import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
 import az.aldoziflaj.popmovies.Utility;
+import az.aldoziflaj.popmovies.adapters.CommentsAdapter;
+import az.aldoziflaj.popmovies.adapters.TrailersAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
 
 public class MovieDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
     public static final int DETAILS_LOADER = 0;
+    public static final int TRAILERS_LOADER = 1;
+    public static final int REVIEWS_LOADER = 2;
 
     public MovieDetailsFragment() {
     }
@@ -41,6 +47,8 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(DETAILS_LOADER, null, this);
+        getLoaderManager().initLoader(TRAILERS_LOADER, null, this);
+        getLoaderManager().initLoader(REVIEWS_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -52,14 +60,65 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
             return null;
         }
 
-        return new CursorLoader(
-                getActivity(),
-                intent.getData(),
-                null, null, null, null);
+        Uri movieUri = intent.getData();
+        int movieId = Utility.fetchMovieIdFromUri(getActivity(), movieUri);
+
+        switch (id) {
+            case DETAILS_LOADER:
+                return new CursorLoader(
+                        getActivity(),
+                        movieUri,
+                        null, null, null, null);
+
+            case TRAILERS_LOADER:
+                return new CursorLoader(
+                        getActivity(),
+                        MovieContract.TrailerEntry.CONTENT_URI,
+                        null, // all columns
+                        MovieContract.TrailerEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{String.valueOf(movieId)},
+                        null);
+
+            case REVIEWS_LOADER:
+                return new CursorLoader(
+                        getActivity(),
+                        MovieContract.ReviewEntry.CONTENT_URI,
+                        null, // all columns
+                        MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?",
+                        new String[]{String.valueOf(movieId)},
+                        null);
+
+            default:
+                throw new UnsupportedOperationException("Unknown loader");
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        switch (loader.getId()) {
+            case DETAILS_LOADER:
+                loadMovieDetails(cursor);
+                break;
+
+            case TRAILERS_LOADER:
+                loadMovieTrailers(cursor);
+                break;
+
+            case REVIEWS_LOADER:
+//                loadMovieReviews(cursor);
+                break;
+
+            default:
+                Log.e(LOG_TAG, "Loading something miscellaneous?!");
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    private void loadMovieDetails(Cursor cursor) {
         if (!cursor.moveToFirst()) {
             return;
         }
@@ -168,8 +227,41 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
         });
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    private void loadMovieTrailers(Cursor cursor) {
+        if (getView() == null) {
+            return; //error
+        }
 
+        ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_listview);
+        TrailersAdapter adapter = new TrailersAdapter(getActivity(), cursor, 0);
+        trailerListView.setAdapter(adapter);
+
+        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                if (cursor != null) {
+                    int youtubeKeyColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY);
+                    String youtubeKey = cursor.getString(youtubeKeyColumn);
+                    Uri videoUri = Uri.parse(Config.YOUTUBE_TRAILER_URL + youtubeKey);
+
+                    Intent playTrailer = new Intent(Intent.ACTION_VIEW, videoUri);
+                    startActivity(playTrailer);
+                }
+            }
+        });
+    }
+
+    private void loadMovieReviews(Cursor cursor) {
+        if (getView() == null) {
+            return; //error
+        }
+
+        // I'm using trailer_listview just for testing
+        // TODO: Don't do this ^
+        ListView commentsListView = (ListView) getView().findViewById(R.id.trailer_listview);
+        CommentsAdapter adapter = new CommentsAdapter(getActivity(), cursor, 0);
+
+        commentsListView.setAdapter(adapter);
     }
 }
