@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String lastNotificationKey = getString(R.string.prefs_notification_last_key);
-        long lastSyncTime = prefs.getLong(lastNotificationKey, 0);
+        long lastSyncTime = prefs.getLong(lastNotificationKey, 0L);
         if (Utility.isOneDayLater(lastSyncTime)) {
             MovieSyncAdapter.initSyncAdapter(getApplicationContext());
         }

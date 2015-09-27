@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import az.aldoziflaj.popmovies.Config;
 import az.aldoziflaj.popmovies.R;
 import az.aldoziflaj.popmovies.Utility;
+import az.aldoziflaj.popmovies.adapters.CommentsAdapter;
 import az.aldoziflaj.popmovies.adapters.TrailersAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
@@ -100,10 +101,11 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 break;
 
             case TRAILERS_LOADER:
-                loadMovieTrailers(cursor);
+//                loadMovieTrailers(cursor);
                 break;
 
             case REVIEWS_LOADER:
+                loadMovieReviews(cursor);
                 break;
 
             default:
@@ -248,5 +250,18 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 }
             }
         });
+    }
+
+    private void loadMovieReviews(Cursor cursor) {
+        if (getView() == null) {
+            return; //error
+        }
+
+        // I'm using trailer_listview just for testing
+        // TODO: Don't do this ^
+        ListView commentsListView = (ListView) getView().findViewById(R.id.trailer_listview);
+        CommentsAdapter adapter = new CommentsAdapter(getActivity(), cursor, 0);
+
+        commentsListView.setAdapter(adapter);
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/comment_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="aziflaj"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_large" />
+
+    <TextView
+        android:id="@+id/comment_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="I love this movie"
+        android:textColor="@color/gray_dark"
+        android:textSize="@dimen/font_normal" />
+</LinearLayout>
