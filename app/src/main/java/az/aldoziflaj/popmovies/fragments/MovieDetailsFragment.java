@@ -64,14 +64,12 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
 
         switch (id) {
             case DETAILS_LOADER:
-                Log.d(LOG_TAG, "Details loader");
                 return new CursorLoader(
                         getActivity(),
                         movieUri,
                         null, null, null, null);
 
             case TRAILERS_LOADER:
-                Log.d(LOG_TAG, "Trailers loader");
                 return new CursorLoader(
                         getActivity(),
                         MovieContract.TrailerEntry.CONTENT_URI,
@@ -81,7 +79,6 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                         null);
 
             case REVIEWS_LOADER:
-                Log.d(LOG_TAG, "Reviews loader");
                 return new CursorLoader(
                         getActivity(),
                         MovieContract.ReviewEntry.CONTENT_URI,
@@ -107,7 +104,6 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 break;
 
             case REVIEWS_LOADER:
-                Log.d(LOG_TAG, "Loading Reviews");
                 break;
 
             default:

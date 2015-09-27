@@ -25,11 +25,8 @@ public class TrailersAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView trailerTitleTextView = (TextView) view.findViewById(R.id.list_item_trailer_title);
-
         int trailerTitleColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_TITLE);
-
         String trailerTitle = cursor.getString(trailerTitleColumn);
-
         trailerTitleTextView.setText(trailerTitle);
     }
 }
