@@ -27,7 +27,6 @@ import az.aldoziflaj.popmovies.adapters.TrailersAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
 
-//public class MovieDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 public class MovieDetailsFragment extends Fragment {
     public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
 
@@ -193,29 +192,4 @@ public class MovieDetailsFragment extends Fragment {
 
         return view;
     }
-//
-//    private void loadMovieTrailers(Cursor cursor) {
-//        if (getView() == null) {
-//            return; //error
-//        }
-//
-//        ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_listview);
-//        TrailersAdapter adapter = new TrailersAdapter(getActivity(), cursor, 0);
-//        trailerListView.setAdapter(adapter);
-//
-//        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-//                if (cursor != null) {
-//                    int youtubeKeyColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY);
-//                    String youtubeKey = cursor.getString(youtubeKeyColumn);
-//                    Uri videoUri = Uri.parse(Config.YOUTUBE_TRAILER_URL + youtubeKey);
-//
-//                    Intent playTrailer = new Intent(Intent.ACTION_VIEW, videoUri);
-//                    startActivity(playTrailer);
-//                }
-//            }
-//        });
-//    }
 }
