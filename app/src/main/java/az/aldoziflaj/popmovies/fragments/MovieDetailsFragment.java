@@ -1,24 +1,22 @@
 package az.aldoziflaj.popmovies.fragments;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.commonsware.cwac.merge.MergeAdapter;
 import com.squareup.picasso.Picasso;
 
 import az.aldoziflaj.popmovies.Config;
@@ -29,11 +27,9 @@ import az.aldoziflaj.popmovies.adapters.TrailersAdapter;
 import az.aldoziflaj.popmovies.data.MovieContract;
 
 
-public class MovieDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+//public class MovieDetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MovieDetailsFragment extends Fragment {
     public static final String LOG_TAG = MovieDetailsFragment.class.getSimpleName();
-    public static final int DETAILS_LOADER = 0;
-    public static final int TRAILERS_LOADER = 1;
-    public static final int REVIEWS_LOADER = 2;
 
     public MovieDetailsFragment() {
     }
@@ -41,99 +37,68 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_details, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(DETAILS_LOADER, null, this);
-        getLoaderManager().initLoader(TRAILERS_LOADER, null, this);
-        getLoaderManager().initLoader(REVIEWS_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        View rootView = inflater.inflate(R.layout.fragment_details, container, false);
         Intent intent = getActivity().getIntent();
-
         if (intent == null) {
             return null;
         }
 
+        MergeAdapter mergeAdapter = new MergeAdapter();
+
         Uri movieUri = intent.getData();
         int movieId = Utility.fetchMovieIdFromUri(getActivity(), movieUri);
 
-        switch (id) {
-            case DETAILS_LOADER:
-                return new CursorLoader(
-                        getActivity(),
-                        movieUri,
-                        null, null, null, null);
+        Cursor detailsCursor = getActivity().getContentResolver()
+                .query(movieUri, null, null, null, null);
 
-            case TRAILERS_LOADER:
-                return new CursorLoader(
-                        getActivity(),
-                        MovieContract.TrailerEntry.CONTENT_URI,
-                        null, // all columns
-                        MovieContract.TrailerEntry.COLUMN_MOVIE_ID + " = ?",
-                        new String[]{String.valueOf(movieId)},
-                        null);
+        View detailsView = populateDetailsView(detailsCursor);
+        mergeAdapter.addView(detailsView);
 
-            case REVIEWS_LOADER:
-                return new CursorLoader(
-                        getActivity(),
-                        MovieContract.ReviewEntry.CONTENT_URI,
-                        null, // all columns
-                        MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?",
-                        new String[]{String.valueOf(movieId)},
-                        null);
+        Cursor trailersCursor = getActivity().getContentResolver().query(
+                MovieContract.TrailerEntry.CONTENT_URI,
+                null,
+                MovieContract.TrailerEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{String.valueOf(movieId)},
+                null);
 
-            default:
-                throw new UnsupportedOperationException("Unknown loader");
-        }
+        TrailersAdapter trailersAdapter = new TrailersAdapter(getActivity(), trailersCursor, 0);
+        mergeAdapter.addAdapter(trailersAdapter);
+
+        Cursor commentsCursor = getActivity().getContentResolver().query(
+                MovieContract.ReviewEntry.CONTENT_URI,
+                null, // all columns
+                MovieContract.ReviewEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[]{String.valueOf(movieId)},
+                null);
+
+        CommentsAdapter commentsAdapter = new CommentsAdapter(getActivity(), commentsCursor, 0);
+        mergeAdapter.addAdapter(commentsAdapter);
+
+        ListView detailsListView = (ListView) rootView.findViewById(R.id.details_listview);
+        detailsListView.setAdapter(mergeAdapter);
+
+        return rootView;
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        switch (loader.getId()) {
-            case DETAILS_LOADER:
-                loadMovieDetails(cursor);
-                break;
 
-            case TRAILERS_LOADER:
-                loadMovieTrailers(cursor);
-                break;
-
-            case REVIEWS_LOADER:
-//                loadMovieReviews(cursor);
-                break;
-
-            default:
-                Log.e(LOG_TAG, "Loading something miscellaneous?!");
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
-    private void loadMovieDetails(Cursor cursor) {
+    private View populateDetailsView(Cursor cursor) {
         if (!cursor.moveToFirst()) {
-            return;
+            return null;
         }
 
-        if (getView() == null) {
-            //wtf?
-            return;
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.list_item_movie_details, null, false);
+
+        if (view == null) {
+            return null;
         }
 
-        TextView detailsReleaseYear = (TextView) getView().findViewById(R.id.movie_year);
-        ImageView detailsPoster = (ImageView) getView().findViewById(R.id.details_movie_poster);
-        TextView detailsRating = (TextView) getView().findViewById(R.id.movie_rating);
-        TextView detailsRuntime = (TextView) getView().findViewById(R.id.movie_length);
-        final TextView detailsOverview = (TextView) getView().findViewById(R.id.movie_description);
-        Button markAsFavoriteBtn = (Button) getView().findViewById(R.id.favorite_btn);
+        TextView detailsReleaseYear = (TextView) view.findViewById(R.id.movie_year);
+        ImageView detailsPoster = (ImageView) view.findViewById(R.id.details_movie_poster);
+        TextView detailsRating = (TextView) view.findViewById(R.id.movie_rating);
+        TextView detailsRuntime = (TextView) view.findViewById(R.id.movie_length);
+        final TextView detailsOverview = (TextView) view.findViewById(R.id.movie_description);
+        Button markAsFavoriteBtn = (Button) view.findViewById(R.id.favorite_btn);
 
         final int _ID = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry._ID));
         String title = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE));
@@ -225,43 +190,32 @@ public class MovieDetailsFragment extends Fragment implements LoaderManager.Load
                 }
             }
         });
+
+        return view;
     }
-
-    private void loadMovieTrailers(Cursor cursor) {
-        if (getView() == null) {
-            return; //error
-        }
-
-        ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_listview);
-        TrailersAdapter adapter = new TrailersAdapter(getActivity(), cursor, 0);
-        trailerListView.setAdapter(adapter);
-
-        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                if (cursor != null) {
-                    int youtubeKeyColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY);
-                    String youtubeKey = cursor.getString(youtubeKeyColumn);
-                    Uri videoUri = Uri.parse(Config.YOUTUBE_TRAILER_URL + youtubeKey);
-
-                    Intent playTrailer = new Intent(Intent.ACTION_VIEW, videoUri);
-                    startActivity(playTrailer);
-                }
-            }
-        });
-    }
-
-    private void loadMovieReviews(Cursor cursor) {
-        if (getView() == null) {
-            return; //error
-        }
-
-        // I'm using trailer_listview just for testing
-        // TODO: Don't do this ^
-        ListView commentsListView = (ListView) getView().findViewById(R.id.trailer_listview);
-        CommentsAdapter adapter = new CommentsAdapter(getActivity(), cursor, 0);
-
-        commentsListView.setAdapter(adapter);
-    }
+//
+//    private void loadMovieTrailers(Cursor cursor) {
+//        if (getView() == null) {
+//            return; //error
+//        }
+//
+//        ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_listview);
+//        TrailersAdapter adapter = new TrailersAdapter(getActivity(), cursor, 0);
+//        trailerListView.setAdapter(adapter);
+//
+//        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+//                if (cursor != null) {
+//                    int youtubeKeyColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY);
+//                    String youtubeKey = cursor.getString(youtubeKeyColumn);
+//                    Uri videoUri = Uri.parse(Config.YOUTUBE_TRAILER_URL + youtubeKey);
+//
+//                    Intent playTrailer = new Intent(Intent.ACTION_VIEW, videoUri);
+//                    startActivity(playTrailer);
+//                }
+//            }
+//        });
+//    }
 }

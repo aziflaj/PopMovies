@@ -17,14 +17,6 @@
         android:layout_height="wrap_content"
         android:paddingLeft="80dp"
         android:paddingTop="18dp"
-        android:text="Trailer 2"
         android:textAppearance="?android:textAppearanceLarge" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_alignBottom="@+id/image_arrow_play"
-        android:paddingTop="8dp"
-        android:background="@color/gray_dark" />
 
 </RelativeLayout>

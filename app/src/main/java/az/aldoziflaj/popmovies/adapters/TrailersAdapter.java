@@ -28,5 +28,25 @@ public class TrailersAdapter extends CursorAdapter {
         int trailerTitleColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_TITLE);
         String trailerTitle = cursor.getString(trailerTitleColumn);
         trailerTitleTextView.setText(trailerTitle);
+
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int youtubeKeyColumn = cursor.getColumnIndex(MovieContract.TrailerEntry.COLUMN_YOUTUBE_KEY);
+//                String youtubeKey = cursor.getString(youtubeKeyColumn);
+//                Uri videoUri = Uri.parse(Config.YOUTUBE_TRAILER_URL + youtubeKey);
+//
+//                Intent playTrailer = new Intent(Intent.ACTION_VIEW, videoUri);
+//                startActivity(playTrailer);
+//            }
+//        });
+
+//        ListView parentListView = (ListView) view.getParent();
+//        parentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//        });
     }
 }

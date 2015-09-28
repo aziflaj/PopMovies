@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:id="@+id/details_movie_poster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/interstellar" />
+
+        <TextView
+            android:id="@+id/movie_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:text="2014"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/font_larger" />
+
+        <TextView
+            android:id="@+id/movie_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_year"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:paddingBottom="8dp"
+            android:text="120min"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/font_large"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/movie_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_length"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:paddingBottom="8dp"
+            android:text="6.8 / 10 (1245 votes)"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_small" />
+
+        <Button
+            android:id="@+id/favorite_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movie_rating"
+            android:layout_toEndOf="@id/details_movie_poster"
+            android:layout_toRightOf="@id/details_movie_poster"
+            android:background="@color/green_dark"
+            android:padding="8dp"
+            android:text="@string/details.button.favorite.add"
+            android:textAllCaps="true"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/movie_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum ipsum" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray_dark" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/details.trailers.header" />
+
+</LinearLayout>
